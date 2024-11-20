@@ -13,7 +13,7 @@
   min-height: 100svh;
   padding: 80px;
   gap: 64px;
-  font-family: var(--font-geist-sans);
+  font-family: "Inter", serif;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -35,7 +35,6 @@
 }
 
 .main ol {
-  font-family: var(--font-geist-mono);
   padding-left: 0;
   margin: 0;
   font-size: 14px;
@@ -165,4 +164,10 @@ a.secondary {
   .logo {
     filter: invert();
   }
+}
+
+.container {
+  background-color: #808080;
+  border-radius: 15rem;
+  padding: 2rem;
 }
