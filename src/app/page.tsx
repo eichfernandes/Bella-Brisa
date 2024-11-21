@@ -1,30 +1,36 @@
+"use client";
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
 
-const Page = () => {
+const WelcomePage = () => {
   const router = useRouter();
-  const userCode = '0000'; // Este código pode ser dinâmico, vindo de um contexto ou API.
 
   const handleNavigation = () => {
-    if (userCode === '0000') {
-      router.push('/rh'); // Navega para a página de RH
-    } else if (userCode === '0001') {
-      router.push('/admin'); // Navega para a página de Administração
-    } else {
-      alert('Código de usuário inválido!');
-    }
+    router.push('/login'); // Navega para a página de Login
   };
 
   return (
-    <div className="container">
+    <div className="container" style={{ textAlign: 'center', marginTop: '50px' }}>
       <h1>Bem-vindo</h1>
-      <p>Você será direcionado com base no seu código.</p>
-      <button onClick={handleNavigation} className="inputButton">
-        Ir para a Página
+      <p>Faça login para acessar o sistema.</p>
+      <button 
+        onClick={handleNavigation} 
+        className="inputButton" 
+        style={{
+          padding: '10px 20px',
+          fontSize: '16px',
+          cursor: 'pointer',
+          backgroundColor: '#0070f3',
+          color: '#fff',
+          border: 'none',
+          borderRadius: '5px'
+        }}
+      >
+        Ir para o Login
       </button>
     </div>
   );
 };
 
-export default Page;
+export default WelcomePage;

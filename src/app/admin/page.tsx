@@ -1,13 +1,18 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation"; // Import para redirecionamento
 import styles from "./admin.module.css";
 
 export default function Admin() {
-  const [employees, setEmployees] = useState([ // Exemplo pra DB
+  const router = useRouter(); // Hook para navegação
+
+  const handleExit = () => router.push("/login"); // Redireciona para a página de login
+
+  const [employees, setEmployees] = useState([
     {
       id: "001",
-      name: "João Silva",
+      name: "Hugo Leonardo",
       entry: "08:00",
       break: "12:00 - 13:00",
       exit: "17:00",
@@ -15,7 +20,23 @@ export default function Admin() {
     },
     {
       id: "002",
-      name: "Maria Santos",
+      name: "Wagner Martins",
+      entry: "09:00",
+      break: "12:30 - 13:30",
+      exit: "18:00",
+      totalHours: "7.5h",
+    },
+    {
+      id: "003",
+      name: "Tiago Daniel",
+      entry: "09:00",
+      break: "12:30 - 13:30",
+      exit: "18:00",
+      totalHours: "7.5h",
+    },
+    {
+      id: "004",
+      name: "Tiago Rodrigues",
       entry: "09:00",
       break: "12:30 - 13:30",
       exit: "18:00",
@@ -25,6 +46,10 @@ export default function Admin() {
 
   const handleExport = (type: string) => {
     alert(`Exportando relatórios em formato ${type}`);
+  };
+
+  const handleLogout = () => {
+    router.push("/login"); // Redireciona para a página de login
   };
 
   return (
@@ -93,7 +118,20 @@ export default function Admin() {
           <p>Total acumulado: 12 horas</p>
           <button className={styles.extraButton}>Ajustar Manualmente</button>
         </section>
+
+
+        <input
+          type="button"
+          className={styles.ExitButton}
+          value="Sair"
+          onClick={handleExit} // Redireciona ao clicar
+        />
       </main>
+
+      <footer>
+ 
+          
+      </footer>
     </div>
   );
 }
