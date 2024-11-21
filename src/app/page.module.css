@@ -114,7 +114,7 @@ a.secondary {
   flex-shrink: 0;
 }
 
-/* Enable hover only on non-touch devices */
+
 @media (hover: hover) and (pointer: fine) {
   a.primary:hover {
     background: var(--button-primary-hover);
@@ -235,9 +235,6 @@ a.secondary {
   box-shadow: 10px 10px 10px #0002;
 }
 
-
-/*/////////////////////////////////////////*/
-/*Abaixo Sessão para o Arquivo de Ponto*/
 
 .PontoBox {
   max-width: 40rem;

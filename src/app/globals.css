@@ -10,7 +10,7 @@
   --input: #eee;
   --inputButton: #404040;
 }
-/* Peço perdão pela confusão de variáveis para cores, tentei organizar o maximo possivel */
+
 @media (prefers-color-scheme: dark) {
   :root {
     --absolute-theme: #000;
@@ -55,16 +55,8 @@ h1 {
   font-weight: 400;
 }
 
-/*Removendo Setas do Input Type Number*/
-/* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-
-/* Firefox */
-input[type=number] {
-  -moz-appearance: textfield;
-}
-
