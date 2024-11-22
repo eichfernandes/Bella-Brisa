@@ -24,35 +24,39 @@ export default function Login() {
 
   return (
     <div className={styles.page}>
-      <main className={styles.main}>
+      <header className={styles.header}>
         <Image
           className={styles.logo}
           src="/bellabrisa.svg"
-          alt="Logo Bella Brisa"
-          width={80}
-          height={80}
+          alt="Next.js logo"
+          width={70}
+          height={70}
           style={{ marginBottom: 15 }}
           priority
         />
+      </header>
+      <main className={styles.main}>
         <div className={styles.container} style={{ marginBottom: 80 }}>
           <h1>LOGIN</h1>
-          <input
-            className={styles.input}
-            type="number"
-            placeholder="ID de Login"
-            value={userId}
-            onChange={(e) => setUserId(e.target.value)}
-          />
-          <input
-            className={styles.input}
-            type="password"
-            placeholder="Senha"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <button className={styles.inputButton} onClick={handleLogin}>
-            Entrar
-          </button>
+          <div className={styles.ElementsBox}>
+            <input
+              className={styles.input}
+              type="number"
+              placeholder="ID de Login"
+              value={userId}
+              onChange={(e) => setUserId(e.target.value)}
+            /><br/>
+            <input
+              className={styles.input}
+              type="password"
+              placeholder="Senha"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <button className={styles.inputButton} onClick={handleLogin}>
+              Entrar
+            </button>
+          </div>
         </div>
       </main>
     </div>

@@ -179,8 +179,10 @@ a.secondary {
   font-weight: 500;
   font-family: var(--font-Inter);
   width: 75%;
+  min-width: 25svh;
+  max-width: 24rem;
   padding: 1rem;
-  margin: 2rem 1rem 4rem 1rem;
+  margin: 1rem;
   border-radius: 2rem;
   border: none;
   background-color: var(--input);
@@ -201,8 +203,9 @@ a.secondary {
   font-weight: 500;
   font-family: var(--font-Inter);
   width: 35%;
+  min-width: 25svh;
   padding: 1rem;
-  margin: 2rem 1rem 0.5rem 1rem;
+  margin: 1rem;
   border-radius: 2rem;
   border: none;
   box-shadow: 5px 5px 10px #0005;
@@ -221,26 +224,51 @@ a.secondary {
 
 .container {
   background-color: var(--midtone-back);
-  padding: 2rem 1rem;
+  text-align: center;
+  padding: 3rem 2rem;
   border-radius: 1.3rem;
-  display: grid;
-  grid-template-rows: 20px 1fr 20px;
+  display: block;
   align-items: center;
   justify-items: center;
   gap: 0rem;
   box-shadow: 5px 5px 10px #0005;
 }
 
+.defaultTextSize {
+  font-size: 1.5rem;
+} /* Usei para definir o tamanho padrão para um texto comum dentro de um container sem alterar o tamanho das fontes de h1 */
+
 .boxshadow {
   box-shadow: 10px 10px 10px #0002;
 }
 
 
-.PontoBox {
+
+
+.TextBox {
   max-width: 40rem;
   margin: 2rem 2rem 0rem 2rem;
   font-size: 1.5rem;
   text-align: center;
+}
+
+.ElementsBox {
+  text-align: center;
+  margin: 1rem 0rem;
+}
+
+.footerButton {
+  font-size: 1rem;
+  outline: none;
+  border: none;
+  background-color: transparent;
+  color: var(--foreground);
+  text-decoration: underline;
+}
+
+.footerButton:hover {
+  opacity: 60%;
+  cursor: pointer;
 }
 
 .ExitButton {
@@ -282,7 +310,6 @@ a.secondary {
   cursor:pointer;
 }
 
-/*Botoes da Pagina de Previsao*/
 #Checkin {
   background-color: #9d9;
 }

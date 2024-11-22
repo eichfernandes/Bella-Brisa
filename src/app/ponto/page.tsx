@@ -29,12 +29,13 @@ export default function Ponto() {
       </header>
       <main className={styles.main}>
         <div className={styles.container}>
-          <h1>Registro de Ponto</h1>
+          <h1>REGISTRO DE PONTO</h1>
           {stage === "start" && (
-            <div className={styles.PontoBox}>
+            <div className={styles.TextBox}>
               Clique em "Check-In" para iniciar o expediente:<br />
               <input
                 className={styles.CheckButton}
+                id={styles.Checkin}
                 type="button"
                 value="Check-In"
                 onClick={handleCheckIn}
@@ -42,17 +43,19 @@ export default function Ponto() {
             </div>
           )}
           {stage === "beforeLunch" && (
-            <div className={styles.PontoBox}>
+            <div className={styles.TextBox}>
               Clique em "Almoço" para iniciar seu intervalo de almoço ou em
               "Check-Out" para encerrar o expediente:<br />
               <input
                 className={styles.CheckButton}
+                id={styles.Almoco}
                 type="button"
                 value="Almoço"
                 onClick={handleLunch}
               />
               <input
                 className={styles.CheckButton}
+                id={styles.Checkout}
                 type="button"
                 value="Check-Out"
                 onClick={handleCheckOut}
@@ -60,7 +63,7 @@ export default function Ponto() {
             </div>
           )}
           {stage === "duringLunch" && (
-            <div className={styles.PontoBox}>
+            <div className={styles.TextBox}>
               Você está em intervalo no momento. Clique em "Retornar" para
               encerrar o intervalo de almoço:<br />
               <input
@@ -72,10 +75,11 @@ export default function Ponto() {
             </div>
           )}
           {stage === "afterLunch" && (
-            <div className={styles.PontoBox}>
+            <div className={styles.TextBox}>
               Clique em "Check-Out" para encerrar o expediente:<br />
               <input
                 className={styles.CheckButton}
+                id={styles.Checkout}
                 type="button"
                 value="Check-Out"
                 onClick={handleCheckOut}
@@ -83,7 +87,7 @@ export default function Ponto() {
             </div>
           )}
           {stage === "end" && (
-            <div className={styles.PontoBox}>
+            <div className={styles.TextBox}>
               <p>Expediente encerrado. Tenha um bom dia!</p>
             </div>
           )}
@@ -95,6 +99,13 @@ export default function Ponto() {
           onClick={handleExit} // Redireciona ao clicar
         />
       </main>
+      <footer className={styles.footer}>
+        <input
+          type="button"
+          className={styles.footerButton}
+          value="Trocar Senha"
+        />
+      </footer>
     </div>
   );
 }

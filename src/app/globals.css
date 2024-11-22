@@ -55,6 +55,10 @@ h1 {
   font-weight: 400;
 }
 
+h2 {
+  font-weight: 400;
+}
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
