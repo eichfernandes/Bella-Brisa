@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import styles from "../page.module.css";
 
-export default function Login() {
+export default function Cadastro() {
   const [funcName, setFuncName] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();

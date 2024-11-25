@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation"; // Import para redirecionamento
 import styles from "../page.module.css";
 
-export default function Ponto() {
+export default function Previsao() {
     const router = useRouter(); // Hook para navegação
     const handleExit = () => router.push("/login"); // Redireciona para a página de login
 
