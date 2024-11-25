@@ -1,9 +1,14 @@
-const mongoose = require('mongoose');
+import { AdminSchema } from '@/models/Admin';
+import { connect } from 'mongoose';
 require('dotenv').config()
 
-mongoose.connect(process.env.DB_URI);
+connect(process.env.DB_URI);
 
-const Cat = mongoose.model('Cat', { name: String });
+const test = new AdminSchema({
+    cpf: "123456",
+    senha: "123456"
+})
 
-const kitty = new Cat({ name: 'Zildjian' });
-kitty.save().then(() => console.log('meow'));
+test.save().then(() => {
+    console.log("saved")
+})

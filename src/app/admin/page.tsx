@@ -102,7 +102,7 @@ export default function Admin() {
                 <th>Intervalo</th>
                 <th>Saída</th>
                 <th>Total</th>
-                <th>Ações</th>
+                
               </tr>
             </thead>
             <tbody>
@@ -114,10 +114,6 @@ export default function Admin() {
                   <td>{emp.break}</td>
                   <td>{emp.exit}</td>
                   <td>{emp.totalHours}</td>
-                  <td>
-                    <button className={styles.actionButton}>Editar</button>
-                    <button className={styles.actionButton}>Alertar</button>
-                  </td>
                 </tr>
               ))}
             </tbody>
@@ -194,20 +190,25 @@ export default function Admin() {
           </div>
         </section>
 
-        {/* Funcionalidades Extras */}
-        <section className={styles.section}>
+        {/* Funcionalidades Extras 
+        
+                <section className={styles.section}>
           <h2>Banco de Horas</h2>
           <p>Total acumulado: 12 horas</p>
           <button className={styles.extraButton}>Ajustar Manualmente</button>
         </section>
 
-        {/* Botão de Sair */}
+        {/* Botão de Sair */
+        
+        
+        }
         <input
           type="button"
           className={styles.ExitButton}
           value="Sair"
           onClick={handleExit}
         />
+
       </main>
     </div>
   );

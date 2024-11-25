@@ -2,12 +2,13 @@
   "name": "bella-brisa",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "db": "npm ./src/db/connection.ts"
+    "db": "next dev && node ./src/db/connection.js"
   },
   "dependencies": {
     "dotenv": "^16.4.5",
