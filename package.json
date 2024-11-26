@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "db": "next dev && node ./src/db/connection.js"
+    "db": "tsc ./src/db/connection.ts"
   },
   "dependencies": {
     "dotenv": "^16.4.5",
@@ -18,7 +18,7 @@
     "react-dom": "^19.0.0-rc-66855b96-20241106"
   },
   "devDependencies": {
-    "@types/node": "20.17.6",
+    "@types/node": "^20.17.8",
     "@types/react": "18.3.12",
     "@types/react-dom": "^18",
     "typescript": "5.6.3"
