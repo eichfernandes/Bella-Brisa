@@ -5,8 +5,9 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import styles from "../page.module.css";
 
-export default function Cadastro() {
+export default function Editar() {
   const [funcName, setFuncName] = useState("");
+  const [funcCPF, setFuncCPF] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
   const handleBack = () => router.push("/controle"); // Redireciona para a página de Controle
@@ -26,33 +27,37 @@ export default function Cadastro() {
       </header>
       <main className={styles.main}>
         <div className={styles.container}>
-            <h1>CADASTRO DE FUNCIONÁRIO</h1><br/>
-            <h2>ID do Novo Funcionário: 0003</h2>
+            <h1>EDIÇÃO DE FUNCIONÁRIO</h1><br/>
+            <h2>ID: 0002</h2>
+            <h2>Nome: Teste da Silva</h2>
+            <h2>CPF: 000.000.000-00</h2><br/>
+            Para editar um dado, insira na tabela abaixo.<br/>Valores em branco serão mantidos.
           
           <div className={styles.ElementsBox}>
                 <input
                     className={styles.input}
                     type="text"
-                    placeholder="Nome do Funcionário"
+                    placeholder="Nome"
                     value={funcName}
                     onChange={(e) => setFuncName(e.target.value)}
                 /><br/>
                 <input
                     className={styles.input}
-                    type="number"
-                    placeholder="CPF do Funcionário"
-                    value={funcName}
-                    onChange={(e) => setFuncName(e.target.value)}
+                    type="text"
+                    placeholder="CPF"
+                    value={funcCPF}
+                    onChange={(e) => setFuncCPF(e.target.value)}
                 /><br/>
                 <input
                     className={styles.input}
                     type="password"
-                    placeholder="Senha do Funcionário"
+                    placeholder="Senha"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                />
-                <button className={styles.inputButton}>
-                Cadastrar
+                /><br/>
+                <button // Recarrega a página e altera os dados
+                className={styles.inputButton}>
+                    Editar
                 </button>
             </div>
         </div>

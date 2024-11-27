@@ -201,6 +201,32 @@ a.secondary {
   color: transparent;
 }
 
+.Date{
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 500;
+  font-family: var(--font-Inter);
+  width: 15rem;
+  padding: 0.7rem;
+  margin: 1rem;
+  border-radius: 2rem;
+  border: none;
+  background-color: var(--input);
+  color: var(--foreground);
+  box-shadow: 5px 5px 10px #0002 inset;
+  outline-color: var(--foreground);
+}
+
+.Date::placeholder {
+  color: var(--foreground);
+  opacity: 30%;
+  font-weight: normal;
+}
+
+.Date:focus::placeholder {
+  color: transparent;
+}
+
 .SearchBar{
   text-align: center;
   font-size: 1.5rem;
@@ -310,7 +336,7 @@ a.secondary {
 
 .ElementsBox {
   text-align: center;
-  margin: 1rem 0rem;
+  margin: 1rem 1rem;
 }
 
 .footerButton {

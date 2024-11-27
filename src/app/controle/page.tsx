@@ -61,7 +61,7 @@ export default function Gerenciamento() {
 
 export function Func(){
   const router = useRouter();
-  const handleEdit = () => router.push("/rh"); // Configurar para redirecionar para a tela de edição de funcionário
+  const handleEdit = () => router.push("/editar-funcionario"); // Configurar para redirecionar para a tela de edição de funcionário
   
   return(
     <button className={styles.ClickableElementList} onClick={handleEdit}>
