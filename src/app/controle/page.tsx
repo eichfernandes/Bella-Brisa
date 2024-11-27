@@ -6,6 +6,9 @@ import React, { useState } from "react";
 import styles from "../page.module.css";
 
 export default function Gerenciamento() {
+  const router = useRouter();
+  const handleBack = () => router.push("/rh");
+  const handleCadastro = () => router.push("/cadastro-funcionario");
 
   return (
     <div className={styles.page}>
@@ -24,6 +27,7 @@ export default function Gerenciamento() {
         <div className={styles.container} style={{ marginBottom: 80 }}>
           <h1>GERENCIAMENTO DE<br/>FUNCIONÁRIOS</h1><br/>
           <h2>Selecione um funcionário para editar seus dados:</h2><br/>
+          <input type="text" className={styles.SearchBar} placeholder="Pesquisa"/>
           <div className={styles.containerScroll}>
             <div className={styles.scrollbarBox}>
               <Func/>
@@ -38,21 +42,31 @@ export default function Gerenciamento() {
               <Func/>
             </div>
           </div><br/>
-
-          <button className={styles.inputButton}>
-            Voltar
+          <button className={styles.CheckButton2} onClick={handleCadastro}>
+            Cadastrar Novo Funcionário
           </button>
         </div>
       </main>
+      <footer className={styles.footer}>
+        <input
+          type="button"
+          className={styles.ExitButton}
+          value="Voltar"
+          onClick={handleBack} // Redireciona ao clicar
+        />
+      </footer>
     </div>
   );
 }
 
 export function Func(){
+  const router = useRouter();
+  const handleEdit = () => router.push("/rh"); // Configurar para redirecionar para a tela de edição de funcionário
+  
   return(
-    <div className={styles.ClickableElementList}>
+    <button className={styles.ClickableElementList} onClick={handleEdit}>
       <span>Teste da Silva Filho Junior Correa da Silva</span>
       <span>ID 0002</span>
-    </div>
+    </button>
   );
 }

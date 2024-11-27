@@ -9,7 +9,7 @@ export default function Cadastro() {
   const [funcName, setFuncName] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const handleExit = () => router.push("/admin"); // Redireciona para a página de login
+  const handleBack = () => router.push("/controle"); // Redireciona para a página de Controle
 
   return (
     <div className={styles.page}>
@@ -52,8 +52,8 @@ export default function Cadastro() {
         <input
           type="button"
           className={styles.ExitButton}
-          value="Sair"
-          onClick={handleExit} // Redireciona ao clicar
+          value="Voltar"
+          onClick={handleBack} // Redireciona ao clicar
         />
       </main>
     </div>

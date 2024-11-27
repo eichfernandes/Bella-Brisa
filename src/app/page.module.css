@@ -197,6 +197,38 @@ a.secondary {
   font-weight: normal;
 }
 
+.input:focus::placeholder {
+  color: transparent;
+}
+
+.SearchBar{
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 500;
+  font-family: var(--font-Inter);
+  width: 75%;
+  min-width: 25svh;
+  max-width: 24rem;
+  padding: 0.7rem;
+  margin: 1rem;
+  border-radius: 1rem;
+  border: none;
+  background-color: var(--background);
+  color: var(--foreground);
+  box-shadow: 0px 0px 10px #0008 inset;
+  outline: none;
+}
+
+.SearchBar::placeholder {
+  color: var(--foreground);
+  opacity: 30%;
+  font-weight: normal;
+}
+
+.SearchBar:focus::placeholder {
+  color: transparent;
+}
+
 .inputButton{
   text-align: center;
   font-size: 1.3rem;
@@ -218,9 +250,7 @@ a.secondary {
   cursor:pointer;
 }
 
-.input:focus::placeholder {
-  color: transparent;
-}
+
 
 .container {
   background-color: var(--midtone-back);
@@ -241,7 +271,7 @@ a.secondary {
   display: flex;
   align-items: center;
   justify-items: center;
-  box-shadow: 0px 0px 20px #0008 inset;
+  box-shadow: 0px 0px 13px #0008 inset;
   min-width: 60svh;
   height: 25svh;
 }
@@ -249,6 +279,7 @@ a.secondary {
 @media (max-aspect-ratio: 1/1) {
   .containerScroll{
     min-width: 20svh;
+    height: 60svh;
   }
 }
 
@@ -301,6 +332,8 @@ a.secondary {
 
 .ClickableElementList {
   background-color: var(--midtone-back);
+  color: var(--foreground);
+  font-size: 0.9rem;
   text-align: left;
   padding: 1rem;
   border-radius: 1rem;
@@ -313,6 +346,7 @@ a.secondary {
   display: relative;
   box-shadow: 5px 5px 10px #0005;
   width: calc(100% - 2rem);
+  border: none;
 }
 
 .Left {
@@ -363,6 +397,25 @@ a.secondary {
 }
 
 .CheckButton:hover{
+  opacity: 70%;
+  cursor:pointer;
+}
+
+.CheckButton2{
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: 500;
+  font-family: var(--font-Inter);
+  width: 60%;
+  padding: 1rem;
+  margin: 2rem 1rem 0.5rem 1rem;
+  border-radius: 1rem;
+  border: none;
+  box-shadow: 5px 5px 10px #0005;
+  color: #383838;
+}
+
+.CheckButton2:hover{
   opacity: 70%;
   cursor:pointer;
 }

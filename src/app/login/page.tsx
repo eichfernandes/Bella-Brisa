@@ -14,7 +14,7 @@ export default function Login() {
     if (userId === "0000" && password === "senhaRh") {
       router.push("/rh"); // Redireciona para a página de RH e como a página de RH e de ADMIN é a mesma, então vou redirecionar para a mesma pág.
     } else if (userId === "0001" && password === "senhaAdm") {
-      router.push("/admin"); // Redireciona para a página de Admin
+      router.push("/rh"); // Redireciona para a página de RH
     } else if (userId === "0002" && password === "0002") { // Apenas pra teste, #TODO lógica pra funcionário logar.
       router.push("/ponto");
     } else {

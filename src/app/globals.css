@@ -2,13 +2,16 @@
   --absolute-theme: #fff;
   --absolute-inverse: #000;
 
+  --background-darker: #bbb;
   --background: #ddd;
   --midtone-back: #BFBFBF;
   --midtone-fore: #808080;
-  --foreground: #404040;
+  --foreground: #383838;
 
   --input: #eee;
   --inputButton: #404040;
+
+  --shadows: #0005;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -23,6 +26,8 @@
     --foreground: #ddd;
 
     --input: #222;
+
+    --shadows: #0008;
   }
 }
 
