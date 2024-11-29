@@ -58,7 +58,12 @@ export default function Editar() {
                 <button // Recarrega a página e altera os dados
                 className={styles.inputButton}>
                     Editar
-                </button>
+                </button><br/>
+                <button // Recarrega a página e altera os dados
+                className={styles.RemoveButton}>
+                    Excluir
+                </button><br/><br/>
+                Cuidado, este botão deletará o<br/>funcionário do sistema.
             </div>
         </div>
         <input

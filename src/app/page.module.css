@@ -407,6 +407,25 @@ a.secondary {
   cursor: pointer;
 }
 
+.RemoveButton {
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: var(--font-Inter);
+  padding: 0.4rem 1.4rem;
+  margin: 2rem 1rem 0.5rem 1rem;
+  border-radius: 1rem;
+  border: none;
+  box-shadow: 5px 5px 10px #0005;
+  background-color: rgb(150, 61, 61);
+  color: #fff;
+}
+
+.RemoveButton:hover {
+  opacity: 80%;
+  cursor: pointer;
+}
+
 /*Botoes de Checkin e Checkout*/
 .CheckButton{
   text-align: center;
