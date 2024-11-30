@@ -10,7 +10,7 @@ export default function TrocarSenha() {
   const [NewPassword, setNewPass] = useState("");
   const [NewPasswordConfirm, setNewPassConfirm] = useState("");
   const router = useRouter();
-  const handleBack = () => router.push("/rh"); // Redireciona para a página de RH
+  const handleOut = () => router.push("/login"); // Redireciona para a página de RH
 
   return (
     <div className={styles.page}>
@@ -60,8 +60,8 @@ export default function TrocarSenha() {
         <input
           type="button"
           className={styles.ExitButton}
-          value="Voltar"
-          onClick={handleBack} // Redireciona ao clicar
+          value="Sair"
+          onClick={handleOut} // Redireciona ao clicar
         />
       </main>
     </div>

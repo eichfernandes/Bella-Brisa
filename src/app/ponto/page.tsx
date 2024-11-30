@@ -10,12 +10,15 @@ export default function Ponto() {
   const router = useRouter();
 
   const handleCheckIn = () => setStage("beforeLunch");
-  const handleLunch = () => {
+  const handleLunch = () =>
+  {
     setStage("duringLunch");
     router.push("/previsao");
   };
   const handleCheckOut = () => setStage("end");
   const handleExit = () => router.push("/login");
+  const handlePasswordChange = () => router.push('/trocar-senha');
+
 
   return (
     <div className={styles.page}>
@@ -105,6 +108,7 @@ export default function Ponto() {
       <footer className={styles.footer}>
         <input
           type="button"
+          onClick={handlePasswordChange}
           className={styles.footerButton}
           value="Trocar Senha"
         />
