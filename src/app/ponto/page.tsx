@@ -1,18 +1,21 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation"; // Import para redirecionamento
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import styles from "../page.module.css";
 
 export default function Ponto() {
-  const [stage, setStage] = useState("start"); // Define o estágio inicial como "start"
-  const router = useRouter(); // Hook para navegação
+  const [stage, setStage] = useState("start");
+  const router = useRouter();
 
-  const handleCheckIn = () => setStage("beforeLunch"); // Alterna para o estágio antes do almoço
-  const handleLunch = () => setStage("duringLunch"); // Alterna para o estágio durante o almoço
-  const handleCheckOut = () => setStage("end"); // Alterna para o estágio de saída
-  const handleExit = () => router.push("/login"); // Redireciona para a página de login
+  const handleCheckIn = () => setStage("beforeLunch");
+  const handleLunch = () => {
+    setStage("duringLunch");
+    router.push("/previsao");
+  };
+  const handleCheckOut = () => setStage("end");
+  const handleExit = () => router.push("/login");
 
   return (
     <div className={styles.page}>
@@ -96,7 +99,7 @@ export default function Ponto() {
           type="button"
           className={styles.ExitButton}
           value="Sair"
-          onClick={handleExit} // Redireciona ao clicar
+          onClick={handleExit}
         />
       </main>
       <footer className={styles.footer}>
