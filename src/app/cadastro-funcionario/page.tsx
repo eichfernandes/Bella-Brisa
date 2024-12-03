@@ -6,7 +6,9 @@ import React, { useState } from "react";
 import styles from "../page.module.css";
 
 export default function Cadastro() {
+  const [funcID, setFuncID] = useState("");
   const [funcName, setFuncName] = useState("");
+  const [funcCPF, setFuncCPF] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
   const handleBack = () => router.push("/controle"); // Redireciona para a página de Controle
@@ -27,9 +29,16 @@ export default function Cadastro() {
       <main className={styles.main}>
         <div className={styles.container}>
             <h1>CADASTRO DE FUNCIONÁRIO</h1><br/>
-            <h2>ID do Novo Funcionário: 0003</h2>
+            <h2>Insira os dados do funcionário a cadastrar abaixo:</h2>
           
           <div className={styles.ElementsBox}>
+                <input
+                    className={styles.input}
+                    type="number"
+                    placeholder="ID do Funcionário"
+                    value={funcID}
+                    onChange={(e) => setFuncID(e.target.value)}
+                /><br/>
                 <input
                     className={styles.input}
                     type="text"
@@ -41,8 +50,8 @@ export default function Cadastro() {
                     className={styles.input}
                     type="number"
                     placeholder="CPF do Funcionário"
-                    value={funcName}
-                    onChange={(e) => setFuncName(e.target.value)}
+                    value={funcCPF}
+                    onChange={(e) => setFuncCPF(e.target.value)}
                 /><br/>
                 <input
                     className={styles.input}
