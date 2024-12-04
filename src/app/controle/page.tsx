@@ -24,7 +24,7 @@ export default function Gerenciamento() {
         />
       </header>
       <main className={styles.main}>
-        <div className={styles.container} style={{ marginBottom: 80 }}>
+        <div className={styles.container}>
           <h1>GERENCIAMENTO DE<br/>FUNCIONÁRIOS</h1><br/>
           <h2>Selecione um funcionário para editar seus dados:</h2><br/>
           <input type="text" className={styles.SearchBar} placeholder="Pesquisa"/>
@@ -65,7 +65,7 @@ export function Func(){
   
   return(
     <button className={styles.ClickableElementList} onClick={handleEdit}>
-      <span>Teste da Silva Filho Junior Correa da Silva</span>
+      <span>Rafael Eich Fernandes</span>
       <span>ID 0002</span>
     </button>
   );

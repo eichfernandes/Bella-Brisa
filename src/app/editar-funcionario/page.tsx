@@ -29,41 +29,40 @@ export default function Editar() {
         <div className={styles.container}>
             <h1>EDIÇÃO DE FUNCIONÁRIO</h1><br/>
             <h2>ID: 0002</h2>
-            <h2>Nome: Teste da Silva</h2>
+            <h2>Nome: Rafael Eich Fernandes</h2>
             <h2>CPF: 000.000.000-00</h2><br/>
             Para editar um dado, insira na tabela abaixo.<br/>Valores em branco serão mantidos.
           
           <div className={styles.ElementsBox}>
                 <input
-                    className={styles.input}
+                    className={styles.input2}
                     type="text"
                     placeholder="Nome"
                     value={funcName}
                     onChange={(e) => setFuncName(e.target.value)}
                 /><br/>
                 <input
-                    className={styles.input}
-                    type="text"
+                    className={styles.input2}
+                    type="number"
                     placeholder="CPF"
                     value={funcCPF}
                     onChange={(e) => setFuncCPF(e.target.value)}
                 /><br/>
                 <input
-                    className={styles.input}
+                    className={styles.input2}
                     type="password"
                     placeholder="Senha"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 /><br/>
                 <button // Recarrega a página e altera os dados
-                className={styles.inputButton}>
+                className={styles.inputButton2}>
                     Editar
                 </button><br/>
                 <button // Recarrega a página e altera os dados
-                className={styles.RemoveButton}>
+                className={styles.RemoveButton} title="Cuidado! Este botão deletará o funcionário do sistema.">
                     Excluir
-                </button><br/><br/>
-                Cuidado, este botão deletará o<br/>funcionário do sistema.
+                </button>
             </div>
         </div>
         <input

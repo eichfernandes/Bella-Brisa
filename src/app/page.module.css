@@ -173,7 +173,8 @@ a.secondary {
   }
 }
 
-.input{
+/* Input básico e maior */
+.input{ 
   text-align: center;
   font-size: 1.5rem;
   font-weight: 500;
@@ -198,6 +199,36 @@ a.secondary {
 }
 
 .input:focus::placeholder {
+  color: transparent;
+}
+
+/* Input menor e mais simples */
+
+.input2{
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 500;
+  font-family: var(--font-Inter);
+  width: 65%;
+  min-width: 25svh;
+  max-width: 24rem;
+  padding: 0.5rem;
+  margin: 1rem;
+  border-radius: 2rem;
+  border: none;
+  background-color: var(--input);
+  color: var(--foreground);
+  box-shadow: 5px 5px 10px #0002 inset;
+  outline: none;
+}
+
+.input2::placeholder {
+  color: var(--foreground);
+  opacity: 30%;
+  font-weight: normal;
+}
+
+.input2:focus::placeholder {
   color: transparent;
 }
 
@@ -272,6 +303,27 @@ a.secondary {
 }
 
 .inputButton:hover{
+  opacity: 80%;
+  cursor:pointer;
+}
+
+.inputButton2{
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: 500;
+  font-family: var(--font-Inter);
+  width: 25%;
+  min-width: 21svh;
+  padding: 0.5rem;
+  margin: 1rem;
+  border-radius: 2rem;
+  border: none;
+  box-shadow: 5px 5px 10px #0005;
+  background-color: var(--foreground);
+  color: var(--background);
+}
+
+.inputButton2:hover{
   opacity: 80%;
   cursor:pointer;
 }

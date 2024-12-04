@@ -31,7 +31,7 @@ export default function RH() {
             <h1>GESTÃO DE FUNCIONÁRIOS</h1><br/>
             <h2>Acesse "Gerar Relatórios" para baixar relatórios 
               <br/>da equipe ou "Controle de Funcionários"<br/>para edições na mesma.            </h2>
-          <div className={styles.ElementsBox}>
+            <div className={styles.ElementsBox}>
                 <button className={styles.CheckButton2} onClick={handleRelatorio}>
                   Gerar Relatórios
                 </button><br/>

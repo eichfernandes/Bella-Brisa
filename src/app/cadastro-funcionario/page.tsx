@@ -33,34 +33,34 @@ export default function Cadastro() {
           
           <div className={styles.ElementsBox}>
                 <input
-                    className={styles.input}
+                    className={styles.input2}
                     type="number"
                     placeholder="ID do Funcionário"
                     value={funcID}
                     onChange={(e) => setFuncID(e.target.value)}
                 /><br/>
                 <input
-                    className={styles.input}
+                    className={styles.input2}
                     type="text"
                     placeholder="Nome do Funcionário"
                     value={funcName}
                     onChange={(e) => setFuncName(e.target.value)}
                 /><br/>
                 <input
-                    className={styles.input}
+                    className={styles.input2}
                     type="number"
                     placeholder="CPF do Funcionário"
                     value={funcCPF}
                     onChange={(e) => setFuncCPF(e.target.value)}
                 /><br/>
                 <input
-                    className={styles.input}
+                    className={styles.input2}
                     type="password"
                     placeholder="Senha do Funcionário"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
-                <button className={styles.inputButton}>
+                <button className={styles.inputButton2}>
                 Cadastrar
                 </button>
             </div>
