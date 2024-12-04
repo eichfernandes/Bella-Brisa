@@ -45,6 +45,7 @@ export default function RH() {
           className={styles.ExitButton}
           value="Sair"
           onClick={handleExit} // Redireciona ao clicar
+          title="Logout do Sistema"
         />
       </main>
       <footer className={styles.footer}>

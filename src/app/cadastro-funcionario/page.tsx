@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import styles from "../page.module.css";
+import InputMask from 'react-input-mask-next';
 
 export default function Cadastro() {
   const [funcID, setFuncID] = useState("");
