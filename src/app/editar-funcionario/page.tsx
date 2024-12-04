@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import styles from "../page.module.css";
+import MaskedInput, { cpfMask, idMask } from '../Mask';
 
 export default function Editar() {
   const [funcName, setFuncName] = useState("");
@@ -41,12 +42,14 @@ export default function Editar() {
                     value={funcName}
                     onChange={(e) => setFuncName(e.target.value)}
                 /><br/>
-                <input
-                    className={styles.input2}
-                    type="number"
-                    placeholder="CPF"
-                    value={funcCPF}
-                    onChange={(e) => setFuncCPF(e.target.value)}
+                <MaskedInput
+                className={styles.input2}
+                type="text"
+                maskFunction={cpfMask}
+                placeholder="CPF"
+                maxlength="14"
+                value={funcCPF}
+                onChange={(e) => setFuncCPF(e.target.value)}
                 /><br/>
                 <input
                     className={styles.input2}

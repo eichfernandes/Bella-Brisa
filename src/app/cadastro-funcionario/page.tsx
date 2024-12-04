@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import styles from "../page.module.css";
-import InputMask from 'react-input-mask-next';
+import MaskedInput, { cpfMask, idMask } from '../Mask';
 
 export default function Cadastro() {
   const [funcID, setFuncID] = useState("");
@@ -33,11 +33,14 @@ export default function Cadastro() {
             <h2>Insira os dados do funcionário a cadastrar abaixo:</h2>
           
           <div className={styles.ElementsBox}>
-                <input
+                <MaskedInput
                     className={styles.input2}
-                    type="number"
+                    type="text"
                     placeholder="ID do Funcionário"
+                    maskFunction={idMask}
+                    maxLength="4"
                     value={funcID}
+                    max={99}
                     onChange={(e) => setFuncID(e.target.value)}
                 /><br/>
                 <input
@@ -47,12 +50,14 @@ export default function Cadastro() {
                     value={funcName}
                     onChange={(e) => setFuncName(e.target.value)}
                 /><br/>
-                <input
-                    className={styles.input2}
-                    type="number"
-                    placeholder="CPF do Funcionário"
-                    value={funcCPF}
-                    onChange={(e) => setFuncCPF(e.target.value)}
+                <MaskedInput
+                className={styles.input2}
+                type="text"
+                maskFunction={cpfMask}
+                placeholder="CPF do Funcionário"
+                maxlength="14"
+                value={funcCPF}
+                onChange={(e) => setFuncCPF(e.target.value)}
                 /><br/>
                 <input
                     className={styles.input2}
