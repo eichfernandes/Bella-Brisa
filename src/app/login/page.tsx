@@ -9,6 +9,7 @@ export default function Login() {
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+  const handleEsqueciSenha = () => router.push("/esqueci-minha-senha");
 
   const handleLogin = () => {
     if (userId === "0000" && password === "senhaRh") {
@@ -42,7 +43,7 @@ export default function Login() {
             <input
               className={styles.input}
               type="number"
-              placeholder="ID de Login"
+              placeholder="ID ou CPF"
               value={userId}
               onChange={(e) => setUserId(e.target.value)}
             /><br/>
@@ -56,9 +57,19 @@ export default function Login() {
             <button className={styles.inputButton} onClick={handleLogin}>
               Entrar
             </button>
+            <span className={styles.errorText} // Fazer este texto aparecer somente se o login falhar
+            ><br/><br/>Erro de Login: Identificador ou Senha incorretos.</span>
           </div>
         </div>
       </main>
+      <footer className={styles.footer}>
+        <input
+          type="button"
+          className={styles.footerButton}
+          onClick={handleEsqueciSenha}
+          value="Esqueci Minha Senha"
+        />
+      </footer>
     </div>
   );
 }

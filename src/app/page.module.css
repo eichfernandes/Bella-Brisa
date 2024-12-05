@@ -187,13 +187,13 @@ a.secondary {
   border-radius: 2rem;
   border: none;
   background-color: var(--input);
-  color: var(--foreground);
+  color: var(--defaultText);
   box-shadow: 5px 5px 10px #0002 inset;
   outline: none;
 }
 
 .input::placeholder {
-  color: var(--foreground);
+  color: var(--defaultText);
   opacity: 30%;
   font-weight: normal;
 }
@@ -217,13 +217,13 @@ a.secondary {
   border-radius: 2rem;
   border: none;
   background-color: var(--input);
-  color: var(--foreground);
+  color: var(--defaultText);
   box-shadow: 5px 5px 10px #0002 inset;
   outline: none;
 }
 
 .input2::placeholder {
-  color: var(--foreground);
+  color: var(--defaultText);
   opacity: 30%;
   font-weight: normal;
 }
@@ -243,13 +243,13 @@ a.secondary {
   border-radius: 2rem;
   border: none;
   background-color: var(--input);
-  color: var(--foreground);
+  color: var(--defaultText);
   box-shadow: 5px 5px 10px #0002 inset;
   outline-color: var(--foreground);
 }
 
 .Date::placeholder {
-  color: var(--foreground);
+  color: var(--defaultText);
   opacity: 30%;
   font-weight: normal;
 }
@@ -271,13 +271,13 @@ a.secondary {
   border-radius: 1rem;
   border: none;
   background-color: var(--background);
-  color: var(--foreground);
+  color: var(--defaultText);
   box-shadow: 0px 0px 10px #0008 inset;
   outline: none;
 }
 
 .SearchBar::placeholder {
-  color: var(--foreground);
+  color: var(--defaultText);
   opacity: 30%;
   font-weight: normal;
 }
@@ -372,6 +372,11 @@ a.secondary {
   font-size: 1.5rem;
 } /* Usei para definir o tamanho padrão para um texto comum dentro de um container sem alterar o tamanho das fontes de h1 */
 
+.errorText{
+  color: var(--errorText);
+  font-weight: bold;
+}
+
 .boxshadow {
   box-shadow: 10px 10px 10px #0002;
 }
@@ -410,7 +415,7 @@ a.secondary {
 
 .ClickableElementList {
   background-color: var(--midtone-back);
-  color: var(--foreground);
+  color: var(--defaultText);
   font-size: 0.9rem;
   text-align: left;
   padding: 1rem;
@@ -506,6 +511,7 @@ a.secondary {
   width: 60%;
   padding: 1rem;
   margin: 2rem 1rem 0.5rem 1rem;
+  background-color: var(--inputButton);
   border-radius: 1rem;
   border: none;
   box-shadow: 5px 5px 10px #0005;
@@ -521,7 +527,7 @@ a.secondary {
   background-color: #9d9;
 }
 
-#Almoco {
+#Intervalo {
   background-color: rgb(221, 217, 153);
 }
 
@@ -534,7 +540,7 @@ a.secondary {
     background-color: #7b7;
   }
 
-  #Almoco {
+  #Intervalo {
     background-color: rgb(187, 186, 119);
   }
 

@@ -35,7 +35,8 @@ export default function Ponto() {
       </header>
       <main className={styles.main}>
         <div className={styles.container}>
-          <h1>REGISTRO DE PONTO</h1>
+          <h1>REGISTRO DE PONTO</h1><br/>
+          <h2>Rafael Eich Fernandes (ID 0002)</h2>
           {stage === "start" && (
             <div className={styles.TextBox}>
               Clique em "Check-In" para iniciar o expediente:<br />
@@ -50,13 +51,13 @@ export default function Ponto() {
           )}
           {stage === "beforeLunch" && (
             <div className={styles.TextBox}>
-              Clique em "Almoço" para iniciar seu intervalo de almoço ou em
+              Clique em "Intervalo" para iniciar seu intervalo ou em
               "Check-Out" para encerrar o expediente:<br />
               <input
                 className={styles.CheckButton}
-                id={styles.Almoco}
+                id={styles.Intervalo}
                 type="button"
-                value="Almoço"
+                value="Intervalo"
                 onClick={handleLunch}
               />
               <input
@@ -71,7 +72,7 @@ export default function Ponto() {
           {stage === "duringLunch" && (
             <div className={styles.TextBox}>
               Você está em intervalo no momento. Clique em "Retornar" para
-              encerrar o intervalo de almoço:<br />
+              termina-lo:<br />
               <input
                 className={styles.CheckButton}
                 type="button"
