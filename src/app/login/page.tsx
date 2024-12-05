@@ -41,7 +41,7 @@ export default function Login() {
           <div className={styles.ElementsBox}>
             <input
               className={styles.input}
-              type="number"
+              type="textfield"
               placeholder="ID de Login"
               value={userId}
               onChange={(e) => setUserId(e.target.value)}

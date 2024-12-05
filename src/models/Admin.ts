@@ -1,13 +1,20 @@
-import { Schema, model } from "mongoose";
+import { Users } from "../db/db";
 
-interface IAdmin{
-    cpf: string,
-    senha: string
+class Admin {
+  cpf : string = "";
+  senha : string = "";
+ 
+  constructor(cpf: string, senha: string){
+    this.cpf = cpf;
+    this.senha = senha;
+  }
+
+  async save() {
+      await Users.insertOne({
+        cpf: this.cpf,
+        senha: this.senha
+      })
+  }
 }
 
-const AdminSchema = new Schema<IAdmin>({
-    cpf: { type: String, required: true },
-    senha: { type: String, required: true }
-  });
-
-export const Admin = model<IAdmin>('Admin', AdminSchema);
+export {Admin};
