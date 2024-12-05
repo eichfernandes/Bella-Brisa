@@ -11,6 +11,7 @@ export default function Cadastro() {
   const [funcName, setFuncName] = useState("");
   const [funcCPF, setFuncCPF] = useState("");
   const [password, setPassword] = useState("");
+  const [funcEmail, setFuncEmail] = useState("");
   const router = useRouter();
   const handleBack = () => router.push("/controle"); // Redireciona para a página de Controle
 
@@ -36,7 +37,7 @@ export default function Cadastro() {
                 <MaskedInput
                     className={styles.input2}
                     type="text"
-                    placeholder="ID do Funcionário"
+                    placeholder="ID de Funcionário"
                     maskFunction={idMask}
                     maxLength="4"
                     value={funcID}
@@ -46,7 +47,7 @@ export default function Cadastro() {
                 <input
                     className={styles.input2}
                     type="text"
-                    placeholder="Nome do Funcionário"
+                    placeholder="Nome Completo"
                     value={funcName}
                     onChange={(e) => setFuncName(e.target.value)}
                 /><br/>
@@ -54,15 +55,22 @@ export default function Cadastro() {
                 className={styles.input2}
                 type="text"
                 maskFunction={cpfMask}
-                placeholder="CPF do Funcionário"
+                placeholder="CPF"
                 maxlength="14"
                 value={funcCPF}
                 onChange={(e) => setFuncCPF(e.target.value)}
                 /><br/>
                 <input
                     className={styles.input2}
+                    type="email"
+                    placeholder="Email"
+                    value={funcEmail}
+                    onChange={(e) => setFuncEmail(e.target.value)}
+                /><br/>
+                <input
+                    className={styles.input2}
                     type="password"
-                    placeholder="Senha do Funcionário"
+                    placeholder="Senha"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
