@@ -1,11 +1,8 @@
 import { NextResponse } from "next/server";
-import { Admin } from "../../../models/Admin";
-import { connectToDatabase } from "@/db/db";
+import { Admin } from "@/models/Admin";
 
 export async function GET() {
   try {
-    await connectToDatabase();
-
     // Perform CRUD operations
     const admin = new Admin("12345678900", "securePassword");
     await admin.save();

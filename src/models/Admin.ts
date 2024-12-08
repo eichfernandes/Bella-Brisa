@@ -1,4 +1,4 @@
-import { Users } from "@/db/db";
+import { usersCollection } from "@/db/db";
 
 class Admin {
   cpf: string;
@@ -12,7 +12,7 @@ class Admin {
   // Create: Save the Admin instance to the database
   async save() {
     try {
-      const result = await Users.insertOne({
+      const result = await usersCollection.insertOne({
         cpf: this.cpf,
         senha: this.senha,
       });
@@ -25,7 +25,7 @@ class Admin {
   // Read: Find an admin by CPF
   static async findByCPF(cpf: string) {
     try {
-      const admin = await Users.findOne({ cpf });
+      const admin = await usersCollection.findOne({ cpf });
       return admin || null; // Return admin or null if not found
     } catch (error) {
       console.error("Error finding admin by CPF:", error);
@@ -36,7 +36,7 @@ class Admin {
   // Update: Update admin details by CPF
   static async updateByCPF(cpf: string, updateData: Partial<Admin>) {
     try {
-      const result = await Users.updateOne(
+      const result = await usersCollection.updateOne(
         { cpf },
         { $set: updateData }
       );
@@ -53,7 +53,7 @@ class Admin {
   // Delete: Remove an admin by CPF
   static async deleteByCPF(cpf: string) {
     try {
-      const result = await Users.deleteOne({ cpf });
+      const result = await usersCollection.deleteOne({ cpf });
       if (result.deletedCount > 0) {
         console.log("Admin deleted successfully");
       } else {
@@ -67,7 +67,7 @@ class Admin {
   // List All: Retrieve all admins
   static async listAll() {
     try {
-      const admins = await Users.find().toArray();
+      const admins = await usersCollection.find().toArray();
       return admins;
     } catch (error) {
       console.error("Error retrieving admins:", error);
