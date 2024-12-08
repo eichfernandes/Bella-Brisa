@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "db": "tsc ./src/db/test.ts"
+    "db": "npx ts-node ./src/db/test.ts"
   },
   "dependencies": {
     "dotenv": "^16.4.5",
@@ -23,6 +23,7 @@
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@types/react-input-mask": "^3.0.6",
+    "ts-node": "^10.9.2",
     "typescript": "5.6.3"
   }
 }
