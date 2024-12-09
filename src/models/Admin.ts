@@ -1,4 +1,5 @@
 import { usersCollection } from "@/db/db";
+import { hashPassword } from "@/services/Auth";
 
 class Admin {
   cpf: string;
@@ -12,25 +13,31 @@ class Admin {
   // Create: Save the Admin instance to the database
   async save() {
     try {
-      const result = await usersCollection.insertOne({
+      await usersCollection.insertOne({
         cpf: this.cpf,
-        senha: this.senha,
+        senha: await hashPassword(this.senha),
       });
-      console.log("Admin saved:", result.insertedId);
+      console.log("Admin saved successfully");
     } catch (error) {
       console.error("Error saving admin:", error);
     }
   }
 
-  // Read: Find an admin by CPF
-  static async findByCPF(cpf: string) {
+  async delete(){
     try {
-      const admin = await usersCollection.findOne({ cpf });
-      return admin || null; // Return admin or null if not found
+      const cpf = this.cpf;
+      await usersCollection.deleteOne({ cpf });
     } catch (error) {
-      console.error("Error finding admin by CPF:", error);
-      return null;
+      console.error("Error deleting admin:", error);
     }
+  }
+
+
+  // Static functions
+
+  // Read: Find an admin by CPF
+  static async findByCPF(cpf: string): Promise<Admin> {
+      return await usersCollection.findOne({ cpf });
   }
 
   // Update: Update admin details by CPF

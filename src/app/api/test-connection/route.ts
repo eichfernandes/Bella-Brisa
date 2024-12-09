@@ -7,17 +7,10 @@ export async function GET() {
     const admin = new Admin("12345678900", "securePassword");
     await admin.save();
 
-    const foundAdmin = await Admin.findByCPF("12345678900");
-    await Admin.updateByCPF("12345678900", { senha: "newSecurePassword" });
-    await Admin.deleteByCPF("12345678900");
-
-    const allAdmins = await Admin.listAll();
 
     // Return test results
     return NextResponse.json({
       message: "Test completed successfully",
-      foundAdmin,
-      allAdmins,
     });
   } catch (error: any) {
     return NextResponse.json(

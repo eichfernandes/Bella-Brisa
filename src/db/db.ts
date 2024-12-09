@@ -1,4 +1,5 @@
-import { MongoClient } from "mongodb";
+import { Admin } from "@/models/Admin";
+import { Collection, Db, MongoClient } from "mongodb";
 
 declare var process: {
   env: {
@@ -7,7 +8,7 @@ declare var process: {
 };
 let db: any;
 
-const connect = async () => {
+async function connect(): Promise<Db> {
   if (db) return db;
   
   const client = await MongoClient.connect(process.env.DB_URI);
@@ -17,8 +18,7 @@ const connect = async () => {
   return db;
 };
 
-const usersCollection = await connect()
-  .then((db) => db.collection("users"))
-  .catch((error: any) => console.log(error));
+db = await connect()
+const usersCollection = db.collection("users")
 
-export {connect, usersCollection}
+export { usersCollection }
