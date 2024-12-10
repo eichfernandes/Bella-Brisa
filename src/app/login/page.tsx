@@ -43,7 +43,7 @@ export default function Login() {
             <input
               className={styles.input}
               type="textfield"
-              placeholder="ID ou CPF"
+              placeholder="Identificador"
               value={userId}
               onChange={(e) => setUserId(e.target.value)}
             /><br/>
@@ -57,7 +57,7 @@ export default function Login() {
             <button className={styles.inputButton} onClick={handleLogin}>
               Entrar
             </button>
-            <span className={styles.errorText} // Fazer este texto aparecer somente se o login falhar
+            <span className={styles.errorText} hidden // Fazer este texto aparecer somente se o login falhar
             ><br/><br/>Erro de Login: Identificador ou Senha incorretos.</span>
           </div>
         </div>

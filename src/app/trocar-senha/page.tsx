@@ -55,6 +55,10 @@ export default function TrocarSenha() {
                 <button className={styles.inputButton}>
                 Alterar Senha
                 </button>
+                <span className={styles.errorText} hidden // Fazer este texto aparecer somente se a senha nova e a confirmação não baterem
+                ><br/><br/>Erro: A nova senha e a repetição não batem.</span>
+                <span className={styles.errorText} hidden // Fazer este texto aparecer somente se a senha atual estiver incorreta
+                ><br/><br/>Erro: Senha incorreta.</span>
             </div>
         </div>
         <input

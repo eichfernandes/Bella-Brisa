@@ -20,6 +20,9 @@
 # production
 /build
 
+#BD
+/.env
+
 # misc
 .DS_Store
 *.pem
