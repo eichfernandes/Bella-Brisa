@@ -77,6 +77,8 @@ export default function Cadastro() {
                 <button className={styles.inputButton2}>
                 Cadastrar
                 </button>
+                <span className={styles.errorText} hidden // Fazer este texto aparecer somente se algum campo não for preenchido
+                ><br/><br/>Erro: Campo em branco.</span>
             </div>
         </div>
         <input
