@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { User } from "@/models/User";
+import { IUser, User } from "@/models/User";
 import { deleteByCPF, findByCPF, listAll } from "@/services/User";
 
 export async function GET(req: NextRequest, res: NextResponse) {
@@ -18,12 +18,12 @@ export async function GET(req: NextRequest, res: NextResponse) {
 
 export async function POST(req: NextRequest) {
     try {
-        const { nome, cpf, senha } = await req.json()
+        const userData: IUser = await req.json()
         
-        await new User(nome, cpf, senha).save();
+        await new User(userData).save();
         
         return NextResponse.json({
-            message: { nome, cpf }
+            message: { userData }
         })
     } catch (error) {
         return NextResponse.json({ error: 'Something went wrong.' })
