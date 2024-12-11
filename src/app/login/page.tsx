@@ -1,12 +1,14 @@
 "use client";
 
-import { FormEvent } from 'react';
+import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from "next/image";
-import styles from"../page.module.css"
+import styles from "../page.module.css";
 
 export default function LoginPage() {
   const router = useRouter();
+  const [userId, setUserId] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -24,7 +26,7 @@ export default function LoginPage() {
     if (response.ok) {
       router.push('/profile');
     } else {
-      alert('CPF ou senha incorretos!');
+      setErrorMessage('Erro de Login: Identificador ou Senha incorretos.');
     }
   }
 
@@ -37,30 +39,22 @@ export default function LoginPage() {
           alt="Logo"
           width={70}
           height={70}
-          style={{ marginBottom: 15 }}
           priority
         />
       </header>
       <main className={styles.main}>
-        <div className={styles.container} style={{ marginBottom: 80 }}>
+        <div className={styles.container}>
           <h1>LOGIN</h1>
           <form onSubmit={handleSubmit} className={styles.ElementsBox}>
             <input
               className={styles.input}
-<<<<<<< HEAD
-              type="textfield"
-              placeholder="Identificador"
+              type="text"
+              name="cpf" // Alterado para coincidir com o FormData
+              placeholder="CPF"
               value={userId}
               onChange={(e) => setUserId(e.target.value)}
-            /><br/>
-=======
-              type="text"
-              name="cpf"
-              placeholder="ID ou CPF"
               required
-            />
-            <br />
->>>>>>> ff6890f (Adição da lógica para conexão do BD)
+            /><br />
             <input
               className={styles.input}
               type="password"
@@ -71,18 +65,12 @@ export default function LoginPage() {
             <button type="submit" className={styles.inputButton}>
               Entrar
             </button>
-<<<<<<< HEAD
-            <span className={styles.errorText} hidden // Fazer este texto aparecer somente se o login falhar
-            ><br/><br/>Erro de Login: Identificador ou Senha incorretos.</span>
-          </div>
-=======
-            <br />
-            <span className={styles.errorText}>
-              <br />
-              <br /> Erro de Login: Identificador ou Senha incorretos.
-            </span>
+            {errorMessage && (
+              <span className={styles.errorText}>
+                <br /><br />{errorMessage}
+              </span>
+            )}
           </form>
->>>>>>> ff6890f (Adição da lógica para conexão do BD)
         </div>
       </main>
       <footer className={styles.footer}>
