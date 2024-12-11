@@ -1,27 +1,32 @@
 "use client";
 
+import { FormEvent } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
-import styles from "../page.module.css";
+import styles from"../page.module.css"
 
-export default function Login() {
-  const [userId, setUserId] = useState("");
-  const [password, setPassword] = useState("");
+export default function LoginPage() {
   const router = useRouter();
-  const handleEsqueciSenha = () => router.push("/esqueci-minha-senha");
 
-  const handleLogin = () => {
-    if (userId === "0000" && password === "senhaRh") {
-      router.push("/rh"); // Redireciona para a página de RH e como a página de RH e de ADMIN é a mesma, então vou redirecionar para a mesma pág.
-    } else if (userId === "0001" && password === "senhaAdm") {
-      router.push("/rh"); // Redireciona para a página de RH
-    } else if (userId === "0002" && password === "0002") { // Apenas pra teste, #TODO lógica pra funcionário logar.
-      router.push("/ponto");
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+    const cpf = formData.get('cpf');
+    const senha = formData.get('senha');
+
+    const response = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ cpf, senha }),
+    });
+
+    if (response.ok) {
+      router.push('/profile');
     } else {
-      alert("ID ou senha incorretos!"); // Alerta caso os dados sejam inválidos
+      alert('CPF ou senha incorretos!');
     }
-  };
+  }
 
   return (
     <div className={styles.page}>
@@ -29,7 +34,7 @@ export default function Login() {
         <Image
           className={styles.logo}
           src="/bellabrisa.svg"
-          alt="Next.js logo"
+          alt="Logo"
           width={70}
           height={70}
           style={{ marginBottom: 15 }}
@@ -39,36 +44,55 @@ export default function Login() {
       <main className={styles.main}>
         <div className={styles.container} style={{ marginBottom: 80 }}>
           <h1>LOGIN</h1>
-          <div className={styles.ElementsBox}>
+          <form onSubmit={handleSubmit} className={styles.ElementsBox}>
             <input
               className={styles.input}
+<<<<<<< HEAD
               type="textfield"
               placeholder="Identificador"
               value={userId}
               onChange={(e) => setUserId(e.target.value)}
             /><br/>
+=======
+              type="text"
+              name="cpf"
+              placeholder="ID ou CPF"
+              required
+            />
+            <br />
+>>>>>>> ff6890f (Adição da lógica para conexão do BD)
             <input
               className={styles.input}
               type="password"
+              name="senha"
               placeholder="Senha"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              required
             />
-            <button className={styles.inputButton} onClick={handleLogin}>
+            <button type="submit" className={styles.inputButton}>
               Entrar
             </button>
+<<<<<<< HEAD
             <span className={styles.errorText} hidden // Fazer este texto aparecer somente se o login falhar
             ><br/><br/>Erro de Login: Identificador ou Senha incorretos.</span>
           </div>
+=======
+            <br />
+            <span className={styles.errorText}>
+              <br />
+              <br /> Erro de Login: Identificador ou Senha incorretos.
+            </span>
+          </form>
+>>>>>>> ff6890f (Adição da lógica para conexão do BD)
         </div>
       </main>
       <footer className={styles.footer}>
-        <input
+        <button
           type="button"
           className={styles.footerButton}
-          onClick={handleEsqueciSenha}
-          value="Esqueci Minha Senha"
-        />
+          onClick={() => router.push("/esqueci-minha-senha")}
+        >
+          Esqueci Minha Senha
+        </button>
       </footer>
     </div>
   );

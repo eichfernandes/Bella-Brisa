@@ -49,7 +49,7 @@ export default function Editar() {
                 placeholder="CPF"
                 maxlength="14"
                 value={funcCPF}
-                onChange={(e) => setFuncCPF(e.target.value)}
+                onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setFuncCPF(e.target.value)}
                 /><br/>
                 <input
                     className={styles.input2}
