@@ -67,7 +67,6 @@ export default function Cadastro() {
       </header>
       <main className={styles.main}>
         <div className={styles.container}>
-<<<<<<< HEAD
             <h1>CADASTRO DE FUNCIONÁRIO</h1><br/>
             <h2>Insira os dados do funcionário a cadastrar abaixo:</h2>
           
@@ -80,7 +79,7 @@ export default function Cadastro() {
                     maxLength="4"
                     value={funcID}
                     max={99}
-                    onChange={(e) => setFuncID(e.target.value)}
+                    onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setFuncID(e.target.value)}
                 /><br/>
                 <input
                     className={styles.input2}
@@ -96,7 +95,7 @@ export default function Cadastro() {
                 placeholder="CPF"
                 maxlength="14"
                 value={funcCPF}
-                onChange={(e) => setFuncCPF(e.target.value)}
+                onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setFuncCPF(e.target.value)}
                 /><br/>
                 <input
                     className={styles.input2}
@@ -118,56 +117,6 @@ export default function Cadastro() {
                 <span className={styles.errorText} hidden // Fazer este texto aparecer somente se algum campo não for preenchido
                 ><br/><br/>Erro: Campo em branco.</span>
             </div>
-=======
-          <h1>CADASTRO DE FUNCIONÁRIO</h1>
-          <h2>Insira os dados do funcionário a cadastrar abaixo:</h2>
-          <form onSubmit={handleSubmit} className={styles.loginForm}>
-            <MaskedInput
-              className={styles.input2}
-              type="text"
-              placeholder="ID de Funcionário"
-              maskFunction={idMask}
-              maxLength={4}
-              value={funcID}
-              onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setFuncID(e.target.value)}
-            />
-            <MaskedInput
-              className={styles.input2}
-              type="text"
-              placeholder="Nome Completo"
-              value={funcName}
-              onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setFuncName(e.target.value)} maskFunction={undefined}            />
-            <MaskedInput
-              className={styles.input2}
-              type="text"
-              placeholder="CPF"
-              maskFunction={cpfMask}
-              maxLength={14}
-              value={funcCPF}
-              onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setFuncCPF(e.target.value)}
-            />
-            <input
-              className={styles.input2}
-              type="email"
-              placeholder="Email"
-              value={funcEmail}
-              onChange={(e) => setFuncEmail(e.target.value)}
-            />
-            <input
-              className={styles.input2}
-              type="password"
-              placeholder="Senha"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <button type="submit" className={styles.inputButton2}>
-              Cadastrar
-            </button>
-            {errorMessage && (
-              <span className={styles.errorText}>{errorMessage}</span>
-            )}
-          </form>
->>>>>>> ff6890f (Adição da lógica para conexão do BD)
         </div>
         <button
           type="button"
