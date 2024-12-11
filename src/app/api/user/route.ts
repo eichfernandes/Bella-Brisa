@@ -1,24 +1,55 @@
 import { NextRequest, NextResponse } from "next/server"
-
- 
-export async function POST(req: NextRequest) {
-  try {
-    const { cpf, senha } = await req.json()
-    
-    return NextResponse.json({
-        message: {cpf, senha}
-    })
-  } catch (error: any) {
-    if (error.type === 'CredentialsSignin') {
-        return NextResponse.json({ error: 'Invalid credentials.' })
-    } else {
-        return NextResponse.json({ error: 'Something went wrong.' })
-    }
-  }
-}
+import { User } from "@/models/User";
+import { deleteByCPF, findByCPF, listAll } from "@/services/User";
 
 export async function GET(req: NextRequest, res: NextResponse) {
+    const cpf = req.nextUrl.searchParams.get('cpf')
+    if (cpf){
+        const user = await findByCPF(cpf)
+        return NextResponse.json({
+            user
+        })
+    }
+    const users = await listAll()
     return NextResponse.json({
-        message: "get request"
+        users
     })
 }
+
+export async function POST(req: NextRequest) {
+    try {
+        const { nome, cpf, senha } = await req.json()
+        
+        await new User(nome, cpf, senha).save();
+        
+        return NextResponse.json({
+            message: { nome, cpf }
+        })
+    } catch (error) {
+        return NextResponse.json({ error: 'Something went wrong.' })
+    }
+}
+
+// TODO
+export async function PUT(req: NextRequest) {
+    try {
+        const { nome, cpf, senha } = await req.json()
+    } catch (error: any) {
+        return NextResponse.json({ error: 'Something went wrong.' })
+    }
+}
+
+export async function DELETE(req: NextRequest) {
+    try {
+        const { cpf } = await req.json()
+
+        await deleteByCPF(cpf);
+
+        return NextResponse.json({
+            message: "User removed successfully."
+        })
+    } catch (error: any) {
+        return NextResponse.json({ error: 'Something went wrong.' })
+    }
+}
+

@@ -2,7 +2,7 @@ import { usersCollection } from "@/db/db";
 import { Document } from "mongodb";
 
 export async function findByCPF(cpf: string): Promise<Document | null> {
-    return await usersCollection.findOne({ cpf });
+    return await usersCollection.findOne({ cpf }, { projection: { senha: 0 }});
 }
 
 // Update: Update user details by CPF
@@ -39,8 +39,9 @@ export async function deleteByCPF(cpf: string) {
 // List All: Retrieve all users
 export async function listAll(): Promise<Array<Document>>{
   try {
-    const admins = await usersCollection.find().toArray();
-    return admins;
+    const users = await usersCollection.find({}, { projection: { senha: 0 } }).toArray();
+
+    return users;
   } catch (error) {
     console.error("Error retrieving admins:", error);
     return [];

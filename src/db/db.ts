@@ -1,5 +1,4 @@
-import { Admin } from "@/models/User";
-import { Collection, Db, MongoClient } from "mongodb";
+import { Db, MongoClient } from "mongodb";
 
 declare var process: {
   env: {
