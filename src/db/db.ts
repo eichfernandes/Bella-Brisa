@@ -1,4 +1,4 @@
-import { Admin } from "@/models/Admin";
+import { Admin } from "@/models/User";
 import { Collection, Db, MongoClient } from "mongodb";
 
 declare var process: {
@@ -6,7 +6,7 @@ declare var process: {
     DB_URI: string;
   }
 };
-let db: any;
+let db: Db;
 
 async function connect(): Promise<Db> {
   if (db) return db;
