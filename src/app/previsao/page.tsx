@@ -40,8 +40,11 @@ export default function Previsao() {
 export function Horas() {
     return(
         <div className={styles.TextBox}>
-            Horário de Almoço: 13:00 - 14:00<br/><br/>
+            Horário de Intervalo: 13:00 - 14:00<br/><br/>
             Fim do Expediente: 18:00<br/><br/>
         </div>
     );
-} // Editar para que ao inicio do almoço seja apresentada a previsão de almoço e saída, ao entrar em almoço mostrar a previsao de fim do almoço e ao retornar do almoço a previsão de fim do expediente. O calculo da previsão deve ser feito com base na hora de cada checkin.
+} // Editar para que ao inicio do expediente seja apresentada a previsão de intervalo e saída
+// ao entrar em intervalo mostrar a previsao de fim do intervalo
+// e ao retornar do intervalo  a previsão de fim do expediente
+// O calculo da previsão deve ser feito com base na hora de cada checkin.
