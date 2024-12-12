@@ -1,5 +1,6 @@
 import { usersCollection } from "@/db/db";
 import { Document } from "mongodb";
+import { hashPassword } from "./Auth";
 
 export async function findByCPF(cpf: string): Promise<Document | null> {
     return await usersCollection.findOne({ cpf }, { projection: { senha: 0 }});
@@ -8,17 +9,22 @@ export async function findByCPF(cpf: string): Promise<Document | null> {
 // Update: Update user details by CPF
 export async function updateByCPF(cpf: string, updateData: Partial<Document>) {
   try {
+    let { senha } = updateData;
+    if (senha){
+      updateData.senha = await hashPassword(senha);
+    }
+
     const result = await usersCollection.updateOne(
       { cpf },
       { $set: updateData }
     );
     if (result.matchedCount > 0) {
-      console.log("Admin updated successfully");
+      return { message: "User updated successfully" }
     } else {
-      console.log("No admin found to update");
+      return { message: "No User found to be update" }
     }
   } catch (error) {
-    console.error("Error updating admin:", error);
+    console.error("Error updating User:", error);
   }
 }
 
@@ -27,12 +33,12 @@ export async function deleteByCPF(cpf: string) {
   try {
     const result = await usersCollection.deleteOne({ cpf });
     if (result.deletedCount > 0) {
-      console.log("Admin deleted successfully");
+      console.log("User deleted successfully");
     } else {
-      console.log("No admin found to delete");
+      console.log("No User found to delete");
     }
   } catch (error) {
-    console.error("Error deleting admin:", error);
+    console.error("Error deleting User:", error);
   }
 }
 
@@ -43,7 +49,7 @@ export async function listAll(): Promise<Array<Document>>{
 
     return users;
   } catch (error) {
-    console.error("Error retrieving admins:", error);
+    console.error("Error retrieving Users:", error);
     return [];
   }
-}
+} 

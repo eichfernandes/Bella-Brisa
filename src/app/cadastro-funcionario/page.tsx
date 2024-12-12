@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import styles from "../page.module.css";
 import MaskedInput, { cpfMask, idMask } from "../Mask";
+import { IUser } from "@/models/User";
 
 export default function Cadastro() {
   const [funcID, setFuncID] = useState("");
@@ -17,24 +18,46 @@ export default function Cadastro() {
 
   const handleBack = () => router.push("/controle");
 
+  // Validação do CPF - Apenas números e 11 dígitos
+  const isValidCPF = (cpf: string) => /^[0-9]{11}$/.test(cpf.replace(/\D/g, ""));
+
+  // Validação do Email com Regex
+  const isValidEmail = (email: string) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (!funcID || !funcName || !funcCPF || !password || !funcEmail) {
+    // Limpar formatações de CPF antes da validação
+    const cleanCPF = funcCPF.replace(/\D/g, "");
+
+    // Verificar campos obrigatórios
+    if (!funcID || !funcName || !cleanCPF || !password || !funcEmail) {
       setErrorMessage("Todos os campos são obrigatórios.");
       return;
     }
 
-    const cadastroData = {
+    // Validações específicas
+    if (!isValidCPF(cleanCPF)) {
+      setErrorMessage("CPF inválido. Deve conter 11 números.");
+      return;
+    }
+
+    if (!isValidEmail(funcEmail)) {
+      setErrorMessage("Email inválido.");
+      return;
+    }
+
+    const cadastroData: IUser = {
       id: funcID,
-      name: funcName,
-      cpf: funcCPF,
+      nome: funcName,
+      cpf: cleanCPF,
       email: funcEmail,
-      password: password,
+      senha: password,
     };
 
     try {
-      const response = await fetch("/api/funcionarios/cadastro", {
+      const response = await fetch("/api/user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(cadastroData),
@@ -45,7 +68,9 @@ export default function Cadastro() {
         router.push("/controle");
       } else {
         const errorResponse = await response.json();
-        setErrorMessage(errorResponse.message || "Erro ao cadastrar funcionário.");
+        setErrorMessage(
+          errorResponse.message || "Erro ao cadastrar funcionário."
+        );
       }
     } catch (error) {
       setErrorMessage("Erro inesperado ao processar o cadastro.");
@@ -61,7 +86,6 @@ export default function Cadastro() {
           alt="Next.js logo"
           width={70}
           height={70}
-          style={{ marginBottom: 15 }}
           priority
         />
       </header>

@@ -1,40 +1,37 @@
-import { useState } from 'react';
-
-export default function MaskedInput({ maskFunction, ...props }) {
-  const [value, setValue] = useState('');
-
+export default function MaskedInput({ maskFunction, value, onChange, ...props }) {
   const handleChange = (event) => {
     const rawValue = event.target.value.replace(/\D/g, ''); // Remove caracteres não numéricos
     const maskedValue = maskFunction(rawValue); // Aplica a máscara
-    setValue(maskedValue);
+    if (onChange) {
+      onChange({ target: { value: maskedValue } }); // Passa o valor mascarado para o componente pai
+    }
   };
 
   return (
     <input
       {...props}
-      value={value}
+      value={value} // Usa o valor controlado pelo componente pai
       onChange={handleChange}
     />
   );
 }
 
-// Formato CPF: ###.###.###-##
+// Máscara CPF: ###.###.###-##
 export const cpfMask = (value) => {
-    return value
-        .replace(/(\d{3})(\d)/, '$1.$2') // Adiciona o primeiro ponto
-        .replace(/(\d{3})(\d)/, '$1.$2') // Adiciona o segundo ponto
-        .replace(/(\d{3})(\d{1,2})$/, '$1-$2'); // Adiciona o traço
+  return value
+    .replace(/(\d{3})(\d)/, '$1.$2') // Primeiro ponto
+    .replace(/(\d{3})(\d)/, '$1.$2') // Segundo ponto
+    .replace(/(\d{3})(\d{1,2})$/, '$1-$2'); // Traço
 };
 
-// Formato telefone: (##) #####-####
+// Máscara telefone: (##) #####-####
 export const phoneMask = (value) => {
-    return value
-        .replace(/(\d{2})(\d)/, '($1) $2') // Adiciona o parêntese
-        .replace(/(\d{5})(\d)/, '$1-$2'); // Adiciona o traço
+  return value
+    .replace(/(\d{2})(\d)/, '($1) $2') // Parênteses
+    .replace(/(\d{5})(\d)/, '$1-$2'); // Traço
 };
 
-// Formato ID: ####
+// Máscara ID: ####
 export const idMask = (value) => {
-    return value
-        .replace(/(\d{4})(\d)/, '$1$2') // Praticamente não faz nada
+  return value.replace(/(\d{4})(\d)/, '$1'); // Apenas garante até 4 dígitos
 };
