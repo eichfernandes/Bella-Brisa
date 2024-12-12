@@ -53,15 +53,9 @@ export default function Gerenciamento() {
       </header>
       <main className={styles.main}>
         <div className={styles.container}>
-          <h1>GERENCIAMENTO DE<br />FUNCIONÁRIOS</h1><br />
-          <h2>Selecione um funcionário para editar seus dados:</h2><br />
-          <input
-            type="text"
-            className={styles.SearchBar}
-            placeholder="Pesquisa"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)} // Atualiza o estado da pesquisa
-          />
+          <h1>GERENCIAMENTO DE<br/>FUNCIONÁRIOS</h1>
+          <h2>Selecione um funcionário para editar seus dados:</h2>
+          <input type="text" className={styles.SearchBar} placeholder="Pesquisa"/>
           <div className={styles.containerScroll}>
             <div className={styles.scrollbarBox}>
               {filteredFuncionarios.length > 0 ? (

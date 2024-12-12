@@ -91,57 +91,56 @@ export default function Cadastro() {
       </header>
       <main className={styles.main}>
         <div className={styles.container}>
-          <h1>CADASTRO DE FUNCIONÁRIO</h1>
-          <h2>Insira os dados do funcionário a cadastrar abaixo:</h2>
-          <form onSubmit={handleSubmit} className={styles.ElementsBox}>
-            <MaskedInput
-              className={styles.input2}
-              type="text"
-              placeholder="ID de Funcionário"
-              maskFunction={idMask}
-              value={funcID}
-              onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setFuncID(e.target.value)}
-            /><br />
-            <input
-              className={styles.input2}
-              type="text"
-              placeholder="Nome Completo"
-              value={funcName}
-              onChange={(e) => setFuncName(e.target.value)}
-            /><br />
-            <MaskedInput
-              className={styles.input2}
-              type="text"
-              maskFunction={cpfMask}
-              placeholder="CPF"
-              value={funcCPF}
-              onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setFuncCPF(e.target.value)}
-              maxLength={14} // Limita o input mascarado a 14 caracteres (000.000.000-00)
-            /><br />
-            <input
-              className={styles.input2}
-              type="email"
-              placeholder="Email"
-              value={funcEmail}
-              onChange={(e) => setFuncEmail(e.target.value)}
-            /><br />
-            <input
-              className={styles.input2}
-              type="password"
-              placeholder="Senha"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            /><br />
-            <button type="submit" className={styles.inputButton2}>
-              Cadastrar
-            </button>
-            {errorMessage && (
-              <span className={styles.errorText}>
-                <br />
-                {errorMessage}
-              </span>
-            )}
-          </form>
+            <h1>CADASTRO DE FUNCIONÁRIO</h1>
+            <h2>Insira os dados do funcionário a cadastrar abaixo:</h2>
+          
+          <div className={styles.ElementsBox}>
+                <MaskedInput
+                    className={styles.input2}
+                    type="text"
+                    placeholder="ID de Funcionário"
+                    maskFunction={idMask}
+                    maxLength="4"
+                    value={funcID}
+                    max={99}
+                    onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setFuncID(e.target.value)}
+                /><br/>
+                <input
+                    className={styles.input2}
+                    type="text"
+                    placeholder="Nome Completo"
+                    value={funcName}
+                    onChange={(e) => setFuncName(e.target.value)}
+                /><br/>
+                <MaskedInput
+                className={styles.input2}
+                type="text"
+                maskFunction={cpfMask}
+                placeholder="CPF"
+                maxlength="14"
+                value={funcCPF}
+                onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setFuncCPF(e.target.value)}
+                /><br/>
+                <input
+                    className={styles.input2}
+                    type="email"
+                    placeholder="Email"
+                    value={funcEmail}
+                    onChange={(e) => setFuncEmail(e.target.value)}
+                /><br/>
+                <input
+                    className={styles.input2}
+                    type="password"
+                    placeholder="Senha"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
+                <button className={styles.inputButton2}>
+                Cadastrar
+                </button>
+                <span className={styles.errorText} hidden // Fazer este texto aparecer somente se algum campo não for preenchido
+                ><br/><br/>Erro: Campo em branco.</span>
+            </div>
         </div>
         <button
           type="button"

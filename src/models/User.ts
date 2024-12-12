@@ -17,6 +17,7 @@ class User{
   cpf: string;
   senha: string;
   Horas: {
+    data: string;
     checkIn: Date | null;
     checkOut: Date | null;
     almocoIn: Date | null;

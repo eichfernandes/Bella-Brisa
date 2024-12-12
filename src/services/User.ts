@@ -45,7 +45,7 @@ export async function deleteByCPF(cpf: string) {
 // List All: Retrieve all users
 export async function listAll(): Promise<Array<Document>>{
   try {
-    const users = await usersCollection.find({}, { projection: { senha: 0 } }).toArray();
+    const users = await usersCollection.find({"id": {$not: {$regex: "0000"}}}, { projection: { senha: 0 } }).toArray();
 
     return users;
   } catch (error) {
