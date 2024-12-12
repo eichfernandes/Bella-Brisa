@@ -110,12 +110,14 @@ export default function Editar() {
       </header>
       <main className={styles.main}>
         <div className={styles.container}>
-            <h1>EDIÇÃO DE FUNCIONÁRIO</h1>
-            <h2>ID: 0002</h2>
-            <h2>Nome: Rafael Eich Fernandes</h2>
-            <h2>CPF: 000.000.000-00</h2>
-            Para editar um dado, insira na tabela abaixo.<br/>Valores em branco serão mantidos.
-          
+          <h1>EDIÇÃO DE FUNCIONÁRIO</h1>
+          {errorMessage && <p className={styles.errorText}>{errorMessage}</p>}
+          {successMessage && <p className={styles.successText}>{successMessage}</p>}
+          <h2>ID: {cpf}</h2>
+          <h2>Nome Atual: {funcName}</h2>
+          <h2>CPF Atual: {funcCPF}</h2>
+          <br />
+          <p>Para editar um dado, insira na tabela abaixo. Valores em branco serão mantidos.</p>
           <div className={styles.ElementsBox}>
             <input
               className={styles.input2}
