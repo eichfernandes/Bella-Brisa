@@ -67,7 +67,7 @@ export default function Cadastro() {
       </header>
       <main className={styles.main}>
         <div className={styles.container}>
-            <h1>CADASTRO DE FUNCIONÁRIO</h1><br/>
+            <h1>CADASTRO DE FUNCIONÁRIO</h1>
             <h2>Insira os dados do funcionário a cadastrar abaixo:</h2>
           
           <div className={styles.ElementsBox}>

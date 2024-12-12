@@ -25,8 +25,8 @@ export default function EsqueciMinhaSenha() {
       </header>
       <main className={styles.main}>
         <div className={styles.container}>
-            <h1>ESQUECI MINHA SENHA</h1><br/>
-            <h2>Insira seu ID ou CPF abaixo:</h2>
+            <h1>ESQUECI MINHA SENHA</h1>
+            <h2>Insira seu CPF ou CNPJ abaixo:</h2>
           
           <div className={styles.ElementsBox}>
                 <input

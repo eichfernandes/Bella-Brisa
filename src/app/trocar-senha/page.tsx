@@ -27,7 +27,7 @@ export default function TrocarSenha() {
       </header>
       <main className={styles.main}>
         <div className={styles.container}>
-            <h1>TROCAR SENHA</h1><br/>
+            <h1>TROCAR SENHA</h1>
             <div className={styles.ElementsBox}>
                 <h2>Confirmação de Senha:</h2>
                 <input

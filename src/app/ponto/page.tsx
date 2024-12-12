@@ -33,7 +33,7 @@ export default function Ponto() {
       </header>
       <main className={styles.main}>
         <div className={styles.container}>
-          <h1>REGISTRO DE PONTO</h1><br/>
+          <h1>REGISTRO DE PONTO</h1>
           <h2>Rafael Eich Fernandes (ID 0002)</h2>
           {stage === "start" && (
             <div className={styles.TextBox}>

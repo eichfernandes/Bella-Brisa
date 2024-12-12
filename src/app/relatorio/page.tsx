@@ -25,7 +25,7 @@ export default function RH() {
       </header>
       <main className={styles.main}>
         <div className={styles.container}>
-            <h1>GERAR RELATÓRIOS</h1><br/>
+            <h1>GERAR RELATÓRIOS</h1>
             <h2>Selecione uma data de início<br/>e fim para filtragem do relatório.</h2>
             <div className={styles.ElementsBox}>
                 <span className={styles.defaultTextSize}>Inicio do Relatório:</span>

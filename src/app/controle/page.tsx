@@ -25,8 +25,8 @@ export default function Gerenciamento() {
       </header>
       <main className={styles.main}>
         <div className={styles.container}>
-          <h1>GERENCIAMENTO DE<br/>FUNCIONÁRIOS</h1><br/>
-          <h2>Selecione um funcionário para editar seus dados:</h2><br/>
+          <h1>GERENCIAMENTO DE<br/>FUNCIONÁRIOS</h1>
+          <h2>Selecione um funcionário para editar seus dados:</h2>
           <input type="text" className={styles.SearchBar} placeholder="Pesquisa"/>
           <div className={styles.containerScroll}>
             <div className={styles.scrollbarBox}>
@@ -41,7 +41,7 @@ export default function Gerenciamento() {
               <Func/>
               <Func/>
             </div>
-          </div><br/>
+          </div>
           <button className={styles.CheckButton2} onClick={handleCadastro}>
             Cadastrar Novo Funcionário
           </button>

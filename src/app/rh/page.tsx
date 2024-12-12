@@ -28,18 +28,16 @@ export default function RH() {
       </header>
       <main className={styles.main}>
         <div className={styles.container}>
-            <h1>GESTÃO DE FUNCIONÁRIOS</h1><br/>
+            <h1>GESTÃO DE FUNCIONÁRIOS</h1>
             <h2>Acesse "Gerar Relatórios" para baixar relatórios 
               <br/>da equipe ou "Controle de Funcionários"<br/>para edições quando necessárias.
             </h2>
-            <div className={styles.ElementsBox}>
-                <button className={styles.CheckButton2} onClick={handleRelatorio}>
-                  Gerar Relatórios
-                </button><br/>
-                <button className={styles.CheckButton2} onClick={handleControl}>
-                  Controle de Funcionários
-                </button>
-            </div>
+            <button className={styles.CheckButton2} onClick={handleRelatorio}>
+              Gerar Relatórios
+            </button>
+            <button className={styles.CheckButton2} onClick={handleControl}>
+              Controle de Funcionários
+            </button>
         </div>
         <input
           type="button"

@@ -50,7 +50,7 @@ export default function LoginPage() {
               className={styles.input}
               type="text"
               name="cpf" // Alterado para coincidir com o FormData
-              placeholder="CPF"
+              placeholder="Identificador"
               value={userId}
               onChange={(e) => setUserId(e.target.value)}
               required
