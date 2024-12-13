@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { IUser, User } from "@/models/User";
 import { deleteByCPF, findByCPF, listAll, updateByCPF } from "@/services/User";
+import { authenticate } from "@/services/Auth";
 
 export async function GET(req: NextRequest, res: NextResponse) {
     const cpf = req.nextUrl.searchParams.get('cpf')
@@ -117,4 +118,4 @@ export async function PATCH(req: NextRequest) {
         { status: 500 }
       );
     }
-  }
+}

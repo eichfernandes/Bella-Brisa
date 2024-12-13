@@ -1,6 +1,16 @@
 import { usersCollection } from "@/db/db";
-import { hashPassword } from "@/services/Auth";
+import { hash, compare } from "bcrypt-ts";
+import { sign, verify } from "jsonwebtoken";
+
 import { updateByCPF, deleteByCPF } from "@/services/User";
+
+declare var process:{
+  env: {
+      JWT_SECRET: string;
+  }
+}
+
+const JWT_SECRET = process.env.JWT_SECRET;
 
 export interface IUser{
   id: string;
@@ -40,7 +50,7 @@ class User{
         nome: this.nome,
         email: this.email,
         cpf: this.cpf,
-        senha: await hashPassword(this.senha),
+        senha: await hash(this.senha, 10),
         Horas: this.Horas
       });
     } catch (error) {
@@ -55,6 +65,13 @@ class User{
   async delete(){
       await deleteByCPF(this.cpf)
   }
+
+  generateToken(): string {
+    const secret = process.env.JWT_SECRET!;
+    const payload = { cpf: this.cpf };
+    return sign(payload, secret, { expiresIn: "1h"});
+  }
 }
+
 
 export { User };

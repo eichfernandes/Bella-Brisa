@@ -1,31 +1,26 @@
-import jwt from "jsonwebtoken";
-import { hash, compare } from "bcrypt-ts";
+import { usersCollection } from "@/db/db";
+import { compare } from "bcrypt-ts"
+import { User, IUser } from "@/models/User";
 
-declare var process:{
-    env: {
-        JWT_SECRET: string;
+export async function authenticate(userCredentials: {
+    id: string,
+    senha: string
+}): Promise<string | null> {
+    const { id, senha } = userCredentials;
+
+    // const [res1, res2] = await Promise.all([usersCollection.findOne({ cpf: id }), usersCollection.findOne({ id })])
+    // const user = res1 || res2;
+    const user = await usersCollection.findOne<IUser>({cpf: id});
+    
+    if (!user) {
+      throw new Error("User not found");
     }
-}
 
-const JWT_SECRET = process.env.JWT_SECRET;
+    const isPasswordValid = await compare(senha, user.senha);
+    if (!isPasswordValid) {
+      throw new Error("Invalid password");
+    }
 
-// Generate JWT
-export function generateToken(payload: object): string {
-    return jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" });
-}
-
-// Verify JWT
-export function verifyToken(token: string): jwt.JwtPayload | string {
-    return jwt.verify(token, JWT_SECRET);
-}
-
-// Hash password with bcrypt
-export async function hashPassword(password: string): Promise<string> {
-    return await hash(password, 10);
-}
-
-// Compare plain text password with hashed password
-export async function comparePassword(password: string, hashedPassword: string): Promise<boolean> {
-    return await compare(password, hashedPassword);
-}
-
+    const instance = new User(user);
+    return instance.generateToken();
+  }

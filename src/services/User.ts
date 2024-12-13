@@ -1,6 +1,6 @@
 import { usersCollection } from "@/db/db";
 import { Document } from "mongodb";
-import { hashPassword } from "./Auth";
+import { hash } from "bcrypt-ts";
 
 export async function findByCPF(cpf: string): Promise<Document | null> {
     return await usersCollection.findOne({ cpf }, { projection: { senha: 0 }});
@@ -11,7 +11,7 @@ export async function updateByCPF(cpf: string, updateData: Partial<Document>) {
   try {
     let { senha } = updateData;
     if (senha){
-      updateData.senha = await hashPassword(senha);
+      updateData.senha = await hash(senha, 10);
     }
 
     const result = await usersCollection.updateOne(
