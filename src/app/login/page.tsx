@@ -17,14 +17,14 @@ export default function LoginPage() {
     const cpf = formData.get('cpf');
     const senha = formData.get('senha');
 
-    const response = await fetch('/api/auth/login', {
+    const response = await fetch('/api/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ cpf, senha }),
+      body: JSON.stringify({ id: cpf, senha }),
     });
 
     if (response.ok) {
-      router.push('/profile');
+      router.push('/rh');
     } else {
       setErrorMessage('Erro de Login: Identificador ou Senha incorretos.');
     }

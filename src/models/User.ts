@@ -1,6 +1,6 @@
 import { usersCollection } from "@/db/db";
 import { hash, compare } from "bcrypt-ts";
-import { sign, verify } from "jsonwebtoken";
+import { SignJWT } from "jose";
 
 import { updateByCPF, deleteByCPF } from "@/services/User";
 
@@ -44,18 +44,17 @@ class User{
   }
 
   async save() {
-    try {
-      await usersCollection.insertOne({
-        id: this.id,
-        nome: this.nome,
-        email: this.email,
-        cpf: this.cpf,
-        senha: await hash(this.senha, 10),
-        Horas: this.Horas
-      });
-    } catch (error) {
-      console.error("Error saving admin:", error);
+    if (!this.id || !this.nome || !this.email || !this.cpf || !this.senha){
+      throw new Error("User has blank attributes.")
     }
+    await usersCollection.insertOne({
+      id: this.id,
+      nome: this.nome,
+      email: this.email,
+      cpf: this.cpf,
+      senha: await hash(this.senha, 10),
+      Horas: this.Horas
+    });
   }
 
   async update(updateData: Partial<Document>){
@@ -66,10 +65,11 @@ class User{
       await deleteByCPF(this.cpf)
   }
 
-  generateToken(): string {
-    const secret = process.env.JWT_SECRET!;
-    const payload = { cpf: this.cpf };
-    return sign(payload, secret, { expiresIn: "1h"});
+  async generateToken(): Promise<string>{
+    return new SignJWT({ cpf: this.cpf })
+    .setProtectedHeader({ alg: 'HS256', typ: 'JWT'})
+    .setExpirationTime('1h')  // Set expiration time
+    .sign(new TextEncoder().encode(process.env.JWT_SECRET));
   }
 }
 

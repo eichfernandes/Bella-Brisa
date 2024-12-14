@@ -7,11 +7,16 @@ import styles from "../page.module.css";
 
 export default function RH() {
   const router = useRouter();
-  const handleExit = () => router.push("/login"); // Redireciona para a página de login
   const handleControl = () => router.push("/controle"); // Redireciona para a página de Controle de Funcionários
   const handleRelatorio = () => router.push("/relatorio"); // Redireciona para a página de Relatórios
   const handleTrocarSenha = () => router.push("/trocar-senha"); // Redireciona para a página de Troca de Senha
   
+  async function handleExit() {
+    const res = await fetch('/api/login', { method: 'DELETE' })
+    if (res.ok){
+      router.push("/login"); // Redireciona para a página de login 
+    }
+  }
 
   return (
     <div className={styles.page}>

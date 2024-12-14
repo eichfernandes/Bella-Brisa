@@ -1,21 +1,40 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
+import { jwtVerify } from 'jose';
 
-export function middleware(req: NextRequest) {
-  const token = req.cookies.get("token");
-  const { pathname } = req.nextUrl;
+export async function middleware(req: NextRequest) {
+  const token = req.cookies.get('token')?.value;
+  const loginUrl = new URL('/login', req.url);
+  const pontoUrl = new URL('/ponto', req.url);
 
-  console.log(req)
-
-  if (pathname == ("/login")) {
-    return NextResponse.next();
-  }
-
-  // Redirect if no token is present
   if (!token) {
-    return NextResponse.redirect(new URL("/login", req.url));
+    return NextResponse.redirect(loginUrl);
   }
 
-  return NextResponse.next();
+  try {
+    const token = req.cookies.get('token')?.value as string;
+    const { cpf } = (await jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET))).payload as {cpf: string};
+    if (cpf === "0000") return NextResponse.next();
+    
+    if (req.nextUrl.pathname.startsWith("/ponto") || req.nextUrl.pathname.startsWith("/api/ponto")) return NextResponse.next();
+
+    return NextResponse.redirect(pontoUrl);
+
+  } catch (err) {
+    console.error('JWT validation error:', err);
+    return NextResponse.redirect(loginUrl); // Redirect to login if token is invalid
+  }
 }
 
+export const config = {
+  matcher: [
+    '/cadastro-funcionario',
+    '/controle',
+    '/editar-funcionario',
+    '/ponto',
+    '/previsao',
+    '/relatorio',
+    '/rh',
+    '/trocar-senha',
+    '/api/user'
+  ]
+};

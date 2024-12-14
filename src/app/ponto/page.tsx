@@ -15,11 +15,12 @@ export default function Ponto() {
   useEffect(() => {
     async function fetchStage() {
       try {
-        const response = await fetch(`/api/user?cpf=${cpf}`, {
-          method: "GET",
+        const response = await fetch(`/api/ponto`, {
+          method: "GET"
         });
         if (response.ok) {
           const data = await response.json();
+          console.log(data)
           const today = new Date().toISOString().split("T")[0]; // Pega apenas a data (YYYY-MM-DD)
           const todayRecord = data.user?.Horas?.find(
             (record: { data: string }) => record.data === today
@@ -49,10 +50,10 @@ export default function Ponto() {
   const updateStage = async (tipo: string) => {
     setErrorMessage(""); // Limpa mensagens de erro
     try {
-      const response = await fetch("/api/user", {
-        method: "PATCH",
+      const response = await fetch("/api/ponto", {
+        method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cpf, tipo }),
+        body: JSON.stringify({ tipo }),
       });
 
       if (response.ok) {
@@ -86,8 +87,13 @@ export default function Ponto() {
   const handleLunch = () => updateStage("almocoIn");
   const handleAfterLunch = () => updateStage("almocoOut");
   const handleCheckOut = () => updateStage("checkOut");
-  const handleExit = () => router.push("/login");
   const handlePasswordChange = () => router.push("/trocar-senha");
+  async function handleExit() {
+    const res = await fetch('/api/login', { method: 'DELETE' })
+    if (res.ok){
+      router.push("/login"); // Redireciona para a página de login 
+    }
+  }
 
   return (
     <div className={styles.page}>
