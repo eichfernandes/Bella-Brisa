@@ -26,7 +26,10 @@ export async function POST(req: NextRequest) {
             message: "User saved sucessfully"
         })
     } catch (error: any) {
-        return NextResponse.json({ error: error.message })
+        return NextResponse.json(
+            { message: error.message },
+            { status: 400 }
+        )
     }
 }
 

@@ -13,9 +13,9 @@ export async function findById(id: string): Promise<Document | null> {
 export async function userAlreadyExists(user: IUser): Promise<boolean>{
   const result = await Promise.all([findByCPF(user.cpf), findById(user.id)])
     if (result[0] || result[1]){
-      return false;
+      return true;
     }
-    return true;
+    return false;
 }
 
 // Update: Update user details by CPF
