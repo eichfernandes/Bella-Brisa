@@ -2,7 +2,7 @@ import { usersCollection } from "@/db/db";
 import { hash, compare } from "bcrypt-ts";
 import { SignJWT } from "jose";
 
-import { updateByCPF, deleteByCPF } from "@/services/User";
+import { updateByCPF, deleteByCPF, findByCPF, findById, userAlreadyExists } from "@/services/User";
 
 declare var process:{
   env: {
@@ -47,6 +47,9 @@ class User{
     if (!this.id || !this.nome || !this.email || !this.cpf || !this.senha){
       throw new Error("User has blank attributes.")
     }
+    if (await userAlreadyExists(this)){
+      throw new Error("Funcionário com id ou cpf já existente.")
+    }
     await usersCollection.insertOne({
       id: this.id,
       nome: this.nome,
@@ -58,6 +61,9 @@ class User{
   }
 
   async update(updateData: Partial<Document>){
+    if (await userAlreadyExists(this)){
+      throw new Error("Funcionário com id ou cpf já existente.")
+    }
     await updateByCPF(this.cpf, updateData);
   }
 

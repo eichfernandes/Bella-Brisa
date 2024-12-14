@@ -10,9 +10,9 @@ export async function authenticate(userCredentials: {
 }): Promise<string> {
     const { id, senha } = userCredentials;
 
-    // const [res1, res2] = await Promise.all([usersCollection.findOne({ cpf: id }), usersCollection.findOne({ id })])
-    // const user = res1 || res2;
-    const user = await usersCollection.findOne<IUser>({cpf: id});
+    const user = await usersCollection.findOne<IUser>(
+      id.length === 4 ? { id } : {cpf: id}
+    );
     
     if (!user) {
       throw new Error("User not found");

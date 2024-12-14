@@ -1,9 +1,21 @@
 import { usersCollection } from "@/db/db";
 import { Document } from "mongodb";
 import { hash } from "bcrypt-ts";
+import { IUser } from "@/models/User";
 
 export async function findByCPF(cpf: string): Promise<Document | null> {
     return await usersCollection.findOne({ cpf }, { projection: { senha: 0 }});
+}
+export async function findById(id: string): Promise<Document | null> {
+    return await usersCollection.findOne({ id }, { projection: { senha: 0 }});
+}
+
+export async function userAlreadyExists(user: IUser): Promise<boolean>{
+  const result = await Promise.all([findByCPF(user.cpf), findById(user.id)])
+    if (result[0] || result[1]){
+      return false;
+    }
+    return true;
 }
 
 // Update: Update user details by CPF
@@ -45,7 +57,13 @@ export async function deleteByCPF(cpf: string) {
 // List All: Retrieve all users
 export async function listAll(): Promise<Array<Document>>{
   try {
-    const users = await usersCollection.find({"id": {$not: {$regex: "0000"}}}, { projection: { senha: 0 } }).toArray();
+    const users = await usersCollection.find({
+      "id": {
+        $not: {
+          $regex: "0000|0001"
+        }
+      }
+    }, { projection: { senha: 0 } }).toArray();
 
     return users;
   } catch (error) {

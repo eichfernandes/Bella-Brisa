@@ -3,7 +3,7 @@ import { authenticate } from "@/services/Auth";
 
 export async function POST(req: NextRequest, res: NextResponse) {
     try {
-        const {id, senha} = await req.json();
+        const {id , senha} = await req.json();
         const token = await authenticate({id, senha})
         
         const res = NextResponse.json({ message: 'Login successful' });

@@ -7,13 +7,16 @@ export async function middleware(req: NextRequest) {
   const pontoUrl = new URL('/ponto', req.url);
 
   if (!token) {
-    return NextResponse.redirect(loginUrl);
+    return NextResponse.json(
+      { message: "Faça login primeiro." },
+      { status: 401 }
+    );
   }
 
   try {
     const token = req.cookies.get('token')?.value as string;
     const { cpf } = (await jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET))).payload as {cpf: string};
-    if (cpf === "0000") return NextResponse.next();
+    if (cpf === process.env.CNPJ_CLIENTE) return NextResponse.next();
     
     if (req.nextUrl.pathname.startsWith("/ponto") || req.nextUrl.pathname.startsWith("/api/ponto")) return NextResponse.next();
 
