@@ -7,10 +7,7 @@ export async function middleware(req: NextRequest) {
   const pontoUrl = new URL('/ponto', req.url);
 
   if (!token) {
-    return NextResponse.json(
-      { message: "Faça login primeiro." },
-      { status: 401 }
-    );
+    return NextResponse.redirect(loginUrl);
   }
 
   try {

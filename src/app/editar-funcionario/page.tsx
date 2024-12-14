@@ -55,7 +55,7 @@ export default function Editar() {
         senha: password || undefined,
       };
 
-      const response = await fetch("/api/user", {
+      const response = await fetch(`/api/user?cpf=${cpf}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedData),

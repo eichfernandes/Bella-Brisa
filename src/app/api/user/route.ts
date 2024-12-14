@@ -36,6 +36,7 @@ export async function POST(req: NextRequest) {
 export async function PUT(req: NextRequest) {
     try {
         const userData: IUser = await req.json()
+        console.log(userData.cpf)
         const message = await updateByCPF(userData.cpf, userData)
 
         return NextResponse.json(message)
