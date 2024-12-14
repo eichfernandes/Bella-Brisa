@@ -35,6 +35,7 @@ export const config = {
     '/relatorio',
     '/rh',
     '/trocar-senha',
-    '/api/user'
+    '/api/user',
+    '/api/ponto'
   ]
 };
