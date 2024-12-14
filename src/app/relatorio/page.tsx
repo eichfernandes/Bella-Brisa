@@ -1,52 +1,179 @@
 "use client";
 
-import Image from "next/image";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import { jsPDF } from "jspdf";
 import styles from "../page.module.css";
 
-export default function RH() {
+export default function RelatorioPage() {
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [employeeData, setEmployeeData] = useState<any>(null);
+  const [errorMessage, setErrorMessage] = useState("");
+
   const router = useRouter();
-  const handleBack = () => router.push("/rh"); // Redireciona para a página de RH
-  
+
+  // Função para buscar dados do funcionário
+  const fetchEmployeeData = async () => {
+    setErrorMessage(""); // Limpa mensagens de erro
+    try {
+      const response = await fetch(
+        `/api/employee/hours?startDate=${startDate}&endDate=${endDate}`
+      );
+      if (!response.ok) {
+        throw new Error("Erro ao buscar os dados do funcionário.");
+      }
+
+      const data = await response.json();
+      if (!data || !data.Horas) {
+        throw new Error("Dados retornados estão inválidos.");
+      }
+
+      setEmployeeData(data);
+    } catch (error: any) {
+      setErrorMessage(error.message);
+    }
+  };
+
+  // Geração do PDF com os dados do funcionário
+  const generatePDF = () => {
+    if (!startDate || !endDate) {
+      alert("Selecione as datas de início e fim.");
+      return;
+    }
+
+    if (!employeeData || !employeeData.Horas.length) {
+      alert("Nenhum registro encontrado para o período selecionado.");
+      return;
+    }
+
+    const doc = new jsPDF();
+    const { id, nome, cpf, Horas } = employeeData;
+
+    // Cabeçalho do relatório
+    doc.setFontSize(16);
+    doc.text("Relatório de Horas do Funcionário", 10, 10);
+
+    doc.setFontSize(12);
+    doc.text(`ID: ${id}`, 10, 20);
+    doc.text(`Nome: ${nome}`, 10, 30);
+    doc.text(`CPF: ${cpf}`, 10, 40);
+    doc.text(`Período: ${startDate} até ${endDate}`, 10, 50);
+
+    // Adicionando tabela de Horas
+    let y = 60;
+    doc.text("Data          Entrada     Saída       Almoço Início   Almoço Fim", 10, y);
+    y += 10;
+
+    Horas.forEach((hora: any) => {
+      const row = `${hora.data}   ${hora.checkIn}   ${hora.checkOut}   ${hora.almocoIn}   ${hora.almocoOut}`;
+      doc.text(row, 10, y);
+      y += 10;
+    });
+
+    // Salvar PDF
+    doc.save(`Relatorio_${id}_${startDate}_a_${endDate}.pdf`);
+  };
+
+  // Atualiza os dados quando as datas são alteradas
+  useEffect(() => {
+    if (startDate && endDate) {
+      fetchEmployeeData();
+    }
+  }, [startDate, endDate]);
 
   return (
     <div className={styles.page}>
-        <header className={styles.header}>
-        <Image
-          className={styles.logo}
-          src="/bellabrisa.svg"
-          alt="Next.js logo"
-          width={70}
-          height={70}
-          style={{ marginBottom: 15 }}
-          priority
-        />
+      <header>
+        <h1 className={styles.defaultTextSize}>Relatório de Horas</h1>
+        <p className={styles.TextBox}>
+          Selecione o período para visualizar os registros de Horas do funcionário:
+        </p>
       </header>
+
+      {/* Formulário de seleção de datas */}
       <main className={styles.main}>
         <div className={styles.container}>
-            <h1>GERAR RELATÓRIOS</h1>
-            <h2>Selecione uma data de início<br/>e fim para filtragem do relatório.</h2>
-            <div className={styles.ElementsBox}>
-                <span className={styles.defaultTextSize}>Inicio do Relatório:</span>
-                <input type="date" className={styles.Date}/><br/>
-                <span className={styles.defaultTextSize}>Fim do Relatório:</span>
-                <input type="date" className={styles.Date}/><br/>
-                <button className={styles.inputButton}>Baixar <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-download" viewBox="0 0 16 16">
-                    <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"/>
-                    <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z"/>
-                    </svg>
-                </button>
-            </div>
-            
+          <div className={styles.ElementsBox}>
+            <label htmlFor="start-date" className={styles.defaultTextSize}>
+              Início do Relatório:
+            </label>
+            <input
+              id="start-date"
+              type="date"
+              className={styles.Date}
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+            />
+
+            <label htmlFor="end-date" className={styles.defaultTextSize}>
+              Fim do Relatório:
+            </label>
+            <input
+              id="end-date"
+              type="date"
+              className={styles.Date}
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+            />
+
+            <button className={styles.inputButton2} onClick={generatePDF}>
+              Gerar PDF
+            </button>
+          </div>
+
+          {/* Exibição de erro */}
+          {errorMessage && (
+            <p className={`${styles.errorText} ${styles.TextBox}`}>
+              {errorMessage}
+            </p>
+          )}
         </div>
-        <input
+
+        {/* Exibição dos dados */}
+        {employeeData && (
+          <div className={styles.container}>
+            <h2>Dados do Funcionário</h2>
+            <p>
+              <strong>ID:</strong> {employeeData.id}
+            </p>
+            <p>
+              <strong>Nome:</strong> {employeeData.nome}
+            </p>
+            <p>
+              <strong>CPF:</strong> {employeeData.cpf}
+            </p>
+            <h3>Registros de Horas</h3>
+            <div className={styles.containerScroll}>
+              <div className={styles.scrollbarBox}>
+                {employeeData.Horas.map((hora: any, index: number) => (
+                  <div key={index} className={styles.ClickableElementList}>
+                    <div className={styles.Left}>
+                      <p>Data: {hora.data}</p>
+                      <p>Entrada: {hora.checkIn}</p>
+                      <p>Saída: {hora.checkOut}</p>
+                    </div>
+                    <div className={styles.Right}>
+                      <p>Almoço Início: {hora.almocoIn}</p>
+                      <p>Almoço Fim: {hora.almocoOut}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+      </main>
+
+      <footer>
+        <button
           type="button"
           className={styles.ExitButton}
-          value="Voltar"
-          onClick={handleBack} // Redireciona ao clicar
-        />
-      </main>
+          onClick={() => router.push("/controle")}
+        >
+          Voltar
+        </button>
+      </footer>
     </div>
   );
 }

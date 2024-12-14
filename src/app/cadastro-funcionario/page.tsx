@@ -18,17 +18,16 @@ export default function Cadastro() {
 
   const handleBack = () => router.push("/controle");
 
-  // Validação do CPF - Apenas números e 11 dígitos
+  // Validação do CPF
   const isValidCPF = (cpf: string) => /^[0-9]{11}$/.test(cpf.replace(/\D/g, ""));
 
-  // Validação do Email com Regex
+  // Validação do Email
   const isValidEmail = (email: string) =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    // Limpar formatações de CPF antes da validação
     const cleanCPF = funcCPF.replace(/\D/g, "");
 
     // Verificar campos obrigatórios
@@ -48,6 +47,7 @@ export default function Cadastro() {
       return;
     }
 
+    // Dados para envio
     const cadastroData: IUser = {
       id: funcID,
       nome: funcName,
@@ -91,62 +91,66 @@ export default function Cadastro() {
       </header>
       <main className={styles.main}>
         <div className={styles.container}>
-            <h1>CADASTRO DE FUNCIONÁRIO</h1>
-            <h2>Insira os dados do funcionário a cadastrar abaixo:</h2>
-          
-          <div className={styles.ElementsBox}>
-                <MaskedInput
-                    className={styles.input2}
-                    type="text"
-                    placeholder="ID de Funcionário"
-                    maskFunction={idMask}
-                    maxLength="4"
-                    value={funcID}
-                    max={99}
-                    onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setFuncID(e.target.value)}
-                /><br/>
-                <input
-                    className={styles.input2}
-                    type="text"
-                    placeholder="Nome Completo"
-                    value={funcName}
-                    onChange={(e) => setFuncName(e.target.value)}
-                /><br/>
-                <MaskedInput
-                className={styles.input2}
-                type="text"
-                maskFunction={cpfMask}
-                placeholder="CPF"
-                maxlength="14"
-                value={funcCPF}
-                onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setFuncCPF(e.target.value)}
-                /><br/>
-                <input
-                    className={styles.input2}
-                    type="email"
-                    placeholder="Email"
-                    value={funcEmail}
-                    onChange={(e) => setFuncEmail(e.target.value)}
-                /><br/>
-                <input
-                    className={styles.input2}
-                    type="password"
-                    placeholder="Senha"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-                <button className={styles.inputButton2}>
-                Cadastrar
-                </button>
-                <span className={styles.errorText} hidden // Fazer este texto aparecer somente se algum campo não for preenchido
-                ><br/><br/>Erro: Campo em branco.</span>
+          <h1>CADASTRO DE FUNCIONÁRIO</h1>
+          <h2>Insira os dados do funcionário a cadastrar abaixo:</h2>
+
+          <form className={styles.ElementsBox} onSubmit={handleSubmit}>
+            <MaskedInput
+              className={styles.input2}
+              type="text"
+              placeholder="ID de Funcionário"
+              maskFunction={idMask}
+              maxLength="4"
+              value={funcID}
+              onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setFuncID(e.target.value)}
+            />
+            <br />
+            <input
+              className={styles.input2}
+              type="text"
+              placeholder="Nome Completo"
+              value={funcName}
+              onChange={(e) => setFuncName(e.target.value)}
+            />
+            <br />
+            <MaskedInput
+              className={styles.input2}
+              type="text"
+              maskFunction={cpfMask}
+              placeholder="CPF"
+              maxLength="14"
+              value={funcCPF}
+              onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setFuncCPF(e.target.value)}
+            />
+            <br />
+            <input
+              className={styles.input2}
+              type="email"
+              placeholder="Email"
+              value={funcEmail}
+              onChange={(e) => setFuncEmail(e.target.value)}
+            />
+            <br />
+            <input
+              className={styles.input2}
+              type="password"
+              placeholder="Senha"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <br />
+            <button type="submit" className={styles.inputButton2}>
+              Cadastrar
+            </button>
+          </form>
+
+          {errorMessage && (
+            <div className={styles.errorText}>
+              <p>Erro: {errorMessage}</p>
             </div>
+          )}
         </div>
-        <button
-          type="button"
-          className={styles.ExitButton}
-          onClick={handleBack}
-        >
+        <button type="button" className={styles.ExitButton} onClick={handleBack}>
           Voltar
         </button>
       </main>

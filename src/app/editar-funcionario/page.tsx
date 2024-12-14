@@ -7,14 +7,15 @@ import styles from "../page.module.css";
 import MaskedInput, { cpfMask } from "../Mask";
 
 export default function Editar() {
-  const [funcName, setFuncName] = useState(""); // Estado para o nome do funcionário
-  const [funcCPF, setFuncCPF] = useState(""); // Estado para o CPF do funcionário
-  const [password, setPassword] = useState(""); // Estado para a senha do funcionário
-  const [errorMessage, setErrorMessage] = useState(""); // Estado para mensagens de erro
-  const [successMessage, setSuccessMessage] = useState(""); // Estado para mensagens de sucesso
+  const [funcName, setFuncName] = useState(""); // Nome do funcionário
+  const [funcCPF, setFuncCPF] = useState(""); // CPF do funcionário
+  const [funcID, setFuncID] = useState(""); // ID do funcionário
+  const [password, setPassword] = useState(""); // Nova senha do funcionário
+  const [errorMessage, setErrorMessage] = useState(""); // Mensagem de erro
+  const [successMessage, setSuccessMessage] = useState(""); // Mensagem de sucesso
   const router = useRouter();
   const searchParams = useSearchParams();
-  const cpf = searchParams.get("cpf");
+  const cpf = searchParams.get("cpf"); // Obtém o CPF dos parâmetros da URL
 
   // Busca os dados do funcionário pelo CPF
   useEffect(() => {
@@ -28,6 +29,7 @@ export default function Editar() {
           if (user) {
             setFuncName(user.nome || "");
             setFuncCPF(user.cpf || "");
+            setFuncID(user.id || "");
           } else {
             setErrorMessage("Funcionário não encontrado.");
           }
@@ -110,17 +112,17 @@ export default function Editar() {
       </header>
       <main className={styles.main}>
         <div className={styles.container}>
-            <h1>EDIÇÃO DE FUNCIONÁRIO</h1>
-            <h2>ID: 0002</h2>
-            <h2>Nome: Rafael Eich Fernandes</h2>
-            <h2>CPF: 000.000.000-00</h2>
-            Para editar um dado, insira na tabela abaixo.<br/>Valores em branco serão mantidos.
-          
+          <h1>EDIÇÃO DE FUNCIONÁRIO</h1>
+          <h2>ID: {funcID || "Carregando..."}</h2>
+          <h2>Nome: {funcName || "Carregando..."}</h2>
+          <h2>CPF: {funcCPF || "Carregando..."}</h2>
+          <p>Para editar um dado, insira na tabela abaixo.<br />Valores em branco serão mantidos.</p>
+
           <div className={styles.ElementsBox}>
             <input
               className={styles.input2}
               type="text"
-              placeholder="Nome"
+              placeholder="Novo Nome"
               value={funcName}
               onChange={(e) => setFuncName(e.target.value)}
             />
@@ -129,16 +131,16 @@ export default function Editar() {
               className={styles.input2}
               type="text"
               maskFunction={cpfMask}
-              placeholder="CPF"
+              placeholder="Novo CPF"
               maxLength="14"
               value={funcCPF}
-              onChange={(maskedValue: React.SetStateAction<string>) => setFuncCPF(maskedValue)}
+              onChange={(e: any) => setFuncCPF(e.target.value)}
             />
             <br />
             <input
               className={styles.input2}
               type="password"
-              placeholder="Senha"
+              placeholder="Nova Senha"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
@@ -158,6 +160,8 @@ export default function Editar() {
               Excluir
             </button>
           </div>
+          {successMessage && <p className={styles.successText}>{successMessage}</p>}
+          {errorMessage && <p className={styles.errorText}>{errorMessage}</p>}
         </div>
         <input
           type="button"
