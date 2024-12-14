@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { jsPDF } from "jspdf";
@@ -84,16 +85,25 @@ export default function RelatorioPage() {
 
   return (
     <div className={styles.page}>
-      <header>
-        <h1 className={styles.defaultTextSize}>Relatório de Horas</h1>
-        <p className={styles.TextBox}>
-          Selecione o período para visualizar os registros de Horas do funcionário:
-        </p>
+      <header className={styles.header}>
+        <Image
+          className={styles.logo}
+          src="/bellabrisa.svg"
+          alt="Next.js logo"
+          width={70}
+          height={70}
+          style={{ marginBottom: 15 }}
+          priority
+        />
       </header>
 
       {/* Formulário de seleção de datas */}
       <main className={styles.main}>
         <div className={styles.container}>
+          <h1>GERAÇÃO DE RELATÓRIOS</h1>
+          <h2>
+            Selecione uma data de início<br/>e fim para filtragem do relatório.
+          </h2>
           <div className={styles.ElementsBox}>
             <label htmlFor="start-date" className={styles.defaultTextSize}>
               Início do Relatório:
@@ -104,7 +114,7 @@ export default function RelatorioPage() {
               className={styles.Date}
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-            />
+            /><br/>
 
             <label htmlFor="end-date" className={styles.defaultTextSize}>
               Fim do Relatório:
@@ -169,7 +179,7 @@ export default function RelatorioPage() {
         <button
           type="button"
           className={styles.ExitButton}
-          onClick={() => router.push("/controle")}
+          onClick={() => router.push("/rh")}
         >
           Voltar
         </button>

@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'Bella Brisa - Login',
+  title: 'Bella Brisa - Geração de Relatórios',
 }
 
 export default function RootLayout({
