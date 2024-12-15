@@ -7,7 +7,6 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import styles from "../page.module.css";
 
-// Interface dos dados
 export interface IUser {
   id: string;
   nome: string;
@@ -26,10 +25,10 @@ export default function Relatorio() {
   const router = useRouter();
   const [funcionarios, setFuncionarios] = useState<IUser[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterMode, setFilterMode] = useState(false);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
+  // Buscar dados dos funcionários
   useEffect(() => {
     async function fetchFuncionarios() {
       try {
@@ -44,62 +43,100 @@ export default function Relatorio() {
         console.error("Erro ao conectar com a API:", error);
       }
     }
+
     fetchFuncionarios();
   }, []);
 
+  // Filtrar funcionários pelo nome
   const filteredFuncionarios = funcionarios.filter((func) =>
     func.nome.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Função para gerar PDF individual
-  const handleGenerateEmployeeReport = (user: IUser) => {
+  // Gerar relatório PDF para um funcionário
+  const generatePDF = (user: IUser) => {
     const doc = new jsPDF();
-    doc.text(`Relatório Detalhado de ${user.nome}`, 10, 10);
-    doc.text(`ID: ${user.id}`, 10, 20);
-    doc.text(`CPF: ${user.cpf}`, 10, 30);
+
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.text(`Funcionário: ${user.nome}`, 10, 10);
+    doc.text(`ID: ${user.id}`, 10, 16);
+
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Horas trabalhadas no mês: ${calculateTotalHours(user.Horas)}`, 10, 26);
+    doc.text(`Inconsistências: ${calculateTotalInconsistency(user.Horas)}`, 10, 32);
+
+    const tableHeaders = [
+      "Data",
+      "Entrada",
+      "Saída",
+      "Horas Trabalhadas",
+      "Entrada Almoço",
+      "Saída Almoço",
+      "Duração Almoço",
+      "Inconsistência",
+    ];
 
     const tableData = user.Horas.map((hora) => [
       hora.data || "FALTA",
       formatHour(hora.checkIn),
       formatHour(hora.checkOut),
+      formatDecimalToHours(calculateHoursWorked(hora.checkIn, hora.checkOut)),
       formatHour(hora.almocoIn),
       formatHour(hora.almocoOut),
+      formatDecimalToHours(calculateLunchDuration(hora.almocoIn, hora.almocoOut)),
+      formatDecimalToHours(calculateInconsistency(hora.checkIn, hora.checkOut)),
     ]);
 
     (doc as any).autoTable({
-      head: [["Data", "Entrada", "Saída", "Entrada Almoço", "Saída Almoço"]],
-      body: tableData,
       startY: 40,
+      head: [tableHeaders],
+      body: tableData,
       theme: "grid",
       styles: { fontSize: 8, halign: "center" },
     });
 
-    doc.save(`Relatorio_${user.nome.replace(/ /g, "_")}.pdf`);
+    doc.save(`Relatorio_${user.nome}.pdf`);
   };
 
-  // Função para gerar relatório geral
-  const handleDownloadGeneralReport = () => {
+  // Gerar relatório geral de todos os funcionários
+  const generateGeneralPDF = () => {
     const doc = new jsPDF();
+
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
     doc.text("Relatório Geral de Funcionários", 10, 10);
+
+    const tableHeaders = [
+      "Funcionário",
+      "Data",
+      "Entrada",
+      "Saída",
+      "Horas Trabalhadas",
+      "Entrada Almoço",
+      "Saída Almoço",
+      "Duração Almoço",
+      "Inconsistência",
+    ];
 
     const tableData = funcionarios.flatMap((user) =>
       user.Horas.map((hora) => [
-        user.id,
         user.nome,
         hora.data || "FALTA",
         formatHour(hora.checkIn),
         formatHour(hora.checkOut),
+        formatDecimalToHours(calculateHoursWorked(hora.checkIn, hora.checkOut)),
         formatHour(hora.almocoIn),
         formatHour(hora.almocoOut),
+        formatDecimalToHours(calculateLunchDuration(hora.almocoIn, hora.almocoOut)),
+        formatDecimalToHours(calculateInconsistency(hora.checkIn, hora.checkOut)),
       ])
     );
 
     (doc as any).autoTable({
-      head: [
-        ["ID", "Nome", "Data", "Entrada", "Saída", "Entrada Almoço", "Saída Almoço"],
-      ],
-      body: tableData,
       startY: 20,
+      head: [tableHeaders],
+      body: tableData,
       theme: "grid",
       styles: { fontSize: 8, halign: "center" },
     });
@@ -107,36 +144,58 @@ export default function Relatorio() {
     doc.save("Relatorio_Geral.pdf");
   };
 
-  // Função para gerar relatório filtrado
-  const handleDownloadFilteredReport = () => {
+  // Gerar relatório filtrado por data
+  const generateFilteredPDF = () => {
     const doc = new jsPDF();
-    doc.text("Relatório Filtrado de Funcionários", 10, 10);
 
-    const tableData = funcionarios.flatMap((user) =>
+    const filteredData = funcionarios.flatMap((user) =>
       user.Horas.filter(
-        (hora) => hora.data >= startDate && hora.data <= endDate
-      ).map((hora) => [
-        user.id,
-        user.nome,
-        hora.data || "FALTA",
-        formatHour(hora.checkIn),
-        formatHour(hora.checkOut),
-        formatHour(hora.almocoIn),
-        formatHour(hora.almocoOut),
-      ])
+        (hora) =>
+          new Date(hora.data) >= new Date(startDate) &&
+          new Date(hora.data) <= new Date(endDate)
+      ).map((hora) => ({
+        ...hora,
+        nome: user.nome,
+      }))
     );
 
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.text(`Relatório Filtrado de ${startDate} a ${endDate}`, 10, 10);
+
+    const tableHeaders = [
+      "Funcionário",
+      "Data",
+      "Entrada",
+      "Saída",
+      "Horas Trabalhadas",
+      "Entrada Almoço",
+      "Saída Almoço",
+      "Duração Almoço",
+      "Inconsistência",
+    ];
+
+    const tableData = filteredData.map((data) => [
+      data.nome,
+      data.data || "FALTA",
+      formatHour(data.checkIn),
+      formatHour(data.checkOut),
+      formatDecimalToHours(calculateHoursWorked(data.checkIn, data.checkOut)),
+      formatHour(data.almocoIn),
+      formatHour(data.almocoOut),
+      formatDecimalToHours(calculateLunchDuration(data.almocoIn, data.almocoOut)),
+      formatDecimalToHours(calculateInconsistency(data.checkIn, data.checkOut)),
+    ]);
+
     (doc as any).autoTable({
-      head: [
-        ["ID", "Nome", "Data", "Entrada", "Saída", "Entrada Almoço", "Saída Almoço"],
-      ],
-      body: tableData,
       startY: 20,
+      head: [tableHeaders],
+      body: tableData,
       theme: "grid",
       styles: { fontSize: 8, halign: "center" },
     });
 
-    doc.save("Relatorio_Filtrado.pdf");
+    doc.save(`Relatorio_Filtrado_${startDate}_a_${endDate}.pdf`);
   };
 
   return (
@@ -153,7 +212,7 @@ export default function Relatorio() {
       </header>
       <main className={styles.main}>
         <div className={styles.container}>
-          <h1>RELATÓRIO DETALHADO DE FUNCIONÁRIOS</h1>
+          <h1 className={styles.title}>RELATÓRIO DETALHADO DE FUNCIONÁRIOS</h1>
           <h2>Lista de Funcionários</h2>
           <input
             type="text"
@@ -164,59 +223,38 @@ export default function Relatorio() {
           />
           <div className={styles.containerScroll}>
             <div className={styles.scrollbarBox}>
-              {filteredFuncionarios.length > 0 ? (
-                filteredFuncionarios.map((func) => (
-                  <Func
-                    key={func.id}
-                    funcionario={func}
-                    onClick={() => handleGenerateEmployeeReport(func)}
-                  />
-                ))
-              ) : (
-                <p>Nenhum funcionário encontrado.</p>
-              )}
+              {filteredFuncionarios.map((func) => (
+                <button
+                  key={func.cpf}
+                  className={styles.ClickableElementList}
+                  onClick={() => generatePDF(func)}
+                >
+                  <span>{func.nome}</span>
+                  <span>ID {func.id}</span>
+                </button>
+              ))}
             </div>
           </div>
-          <button
-            className={styles.CheckButton2}
-            onClick={handleDownloadGeneralReport}
-          >
-            Baixar Relatório Geral
-          </button>
-          <button
-            className={styles.CheckButton2}
-            onClick={() => setFilterMode(true)}
-          >
-            Relatório Filtrado
-          </button>
-          {filterMode && (
-            <>
-              <input
-                type="date"
-                className={styles.input}
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-              />
-              <input
-                type="date"
-                className={styles.input}
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-              />
-              <button
-                className={styles.CheckButton2}
-                onClick={handleDownloadFilteredReport}
-              >
-                Baixar Relatório Filtrado
-              </button>
-              <button
-                className={styles.ExitButton}
-                onClick={() => setFilterMode(false)}
-              >
-                Voltar
-              </button>
-            </>
-          )}
+          <div className={styles.dateFilters}>
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+            />
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+            />
+          </div>
+          <div className={styles.buttonGroup}>
+            <button className={styles.GenerateButton} onClick={generateGeneralPDF}>
+              Gerar Relatório Geral
+            </button>
+            <button className={styles.GenerateButton} onClick={generateFilteredPDF}>
+              Gerar Relatório Filtrado
+            </button>
+          </div>
           <button className={styles.ExitButton} onClick={() => router.push("/rh")}>
             Voltar
           </button>
@@ -226,22 +264,40 @@ export default function Relatorio() {
   );
 }
 
-export function Func({
-  funcionario,
-  onClick,
-}: {
-  funcionario: IUser;
-  onClick: () => void;
-}) {
-  return (
-    <button className={styles.ClickableElementList} onClick={onClick}>
-      <span>{funcionario.nome}</span>
-      <span>ID {funcionario.id}</span>
-    </button>
-  );
-}
-
+// Funções auxiliares
 const formatHour = (time: string | null) =>
   time
     ? new Date(time).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
     : "FALTA";
+
+const calculateHoursWorked = (checkIn: string | null, checkOut: string | null) => {
+  if (!checkIn || !checkOut) return 0;
+  return (new Date(checkOut).getTime() - new Date(checkIn).getTime()) / 3600000;
+};
+
+const calculateLunchDuration = (almocoIn: string | null, almocoOut: string | null) => {
+  if (!almocoIn || !almocoOut) return 0;
+  return (new Date(almocoOut).getTime() - new Date(almocoIn).getTime()) / 3600000;
+};
+
+const calculateInconsistency = (checkIn: string | null, checkOut: string | null) => {
+  const worked = calculateHoursWorked(checkIn, checkOut);
+  const expected = 8;
+  return worked - expected;
+};
+
+const formatDecimalToHours = (decimalHours: number): string => {
+  const hours = Math.floor(decimalHours);
+  const minutes = Math.round((decimalHours - hours) * 60);
+  return `${hours}h${minutes.toString().padStart(2, "0")}m`;
+};
+
+const calculateTotalHours = (horas: any[]) =>
+  formatDecimalToHours(
+    horas.reduce((sum, h) => sum + calculateHoursWorked(h.checkIn, h.checkOut), 0)
+  );
+
+const calculateTotalInconsistency = (horas: any[]) =>
+  formatDecimalToHours(
+    horas.reduce((sum, h) => sum + calculateInconsistency(h.checkIn, h.checkOut), 0)
+  );
