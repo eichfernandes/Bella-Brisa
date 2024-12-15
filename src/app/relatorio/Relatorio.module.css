@@ -70,3 +70,32 @@
   gap: 1rem;
 }
 
+.container {
+  background-color: var(--midtone-back);
+  text-align: center;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 5px 5px 10px #0005;
+}
+
+.scrollbarBox {
+  overflow-y: auto;
+  height: 300px;
+  padding: 1rem;
+}
+
+.ClickableElementList {
+  background-color: var(--gray-alpha-200);
+  color: var(--defaultText);
+  padding: 1rem;
+  border-radius: 1rem;
+  margin: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  box-shadow: 2px 2px 5px #0005;
+}
+
+.ClickableElementList:hover {
+  background-color: var(--button-secondary-hover);
+  cursor: pointer;
+}
