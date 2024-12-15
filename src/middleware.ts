@@ -5,6 +5,8 @@ export async function middleware(req: NextRequest) {
   const token = req.cookies.get('token')?.value;
   const loginUrl = new URL('/login', req.url);
   const pontoUrl = new URL('/ponto', req.url);
+  const paginasFuncionario = ['/ponto', '/api/ponto', '/trocar-senha']
+  const isPaginaFuncionario = (paginas: Array<string>) => paginas.reduce((acc, curr) => acc || req.nextUrl.pathname.startsWith(curr), false)
 
   if (!token) {
     return NextResponse.redirect(loginUrl);
@@ -15,7 +17,8 @@ export async function middleware(req: NextRequest) {
     const { cpf } = (await jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET))).payload as {cpf: string};
     if (cpf === process.env.CNPJ_CLIENTE) return NextResponse.next();
     
-    if (req.nextUrl.pathname.startsWith("/ponto") || req.nextUrl.pathname.startsWith("/api/ponto")) return NextResponse.next();
+    console.log(isPaginaFuncionario(paginasFuncionario));
+    if (isPaginaFuncionario(paginasFuncionario)) return NextResponse.next();
 
     return NextResponse.redirect(pontoUrl);
 

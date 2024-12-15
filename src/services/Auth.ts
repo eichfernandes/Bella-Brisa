@@ -15,12 +15,12 @@ export async function authenticate(userCredentials: {
     );
     
     if (!user) {
-      throw new Error("User not found");
+      throw new Error("Usuário e/ou Senha incorretos.");
     }
-
+    
     const isPasswordValid = await compare(senha, user.senha);
     if (!isPasswordValid) {
-      throw new Error("Invalid password");
+      throw new Error("Usuário e/ou Senha incorretos.");
     }
 
     const instance = new User(user);
