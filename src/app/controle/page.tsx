@@ -1,14 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import styles from "../page.module.css";
 import { IUser } from "@/models/User";
 
 export default function Gerenciamento() {
   const router = useRouter();
-  const [funcionarios, setFuncionarios] = useState([]); // Estado para armazenar a lista de funcionários
+  const [funcionarios, setFuncionarios] = useState<IUser[]>([]); // Estado para armazenar a lista de funcionários
   const [searchTerm, setSearchTerm] = useState(""); // Estado para a barra de pesquisa
 
   const handleBack = () => router.push("/rh");
@@ -34,7 +34,7 @@ export default function Gerenciamento() {
   }, []);
 
   // Filtrar funcionários com base no termo de pesquisa
-  const filteredFuncionarios = funcionarios.filter((func:IUser) =>
+  const filteredFuncionarios = funcionarios.filter((func: IUser) =>
     func.nome.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -53,13 +53,19 @@ export default function Gerenciamento() {
       </header>
       <main className={styles.main}>
         <div className={styles.container}>
-          <h1>GERENCIAMENTO DE<br/>FUNCIONÁRIOS</h1>
+          <h1>GERENCIAMENTO DE<br />FUNCIONÁRIOS</h1>
           <h2>Selecione um funcionário para editar seus dados:</h2>
-          <input type="text" className={styles.SearchBar} placeholder="Pesquisa"/>
+          <input
+            type="text"
+            className={styles.SearchBar}
+            placeholder="Pesquisa"
+            value={searchTerm} // Associa o valor do input ao estado searchTerm
+            onChange={(e) => setSearchTerm(e.target.value)} // Atualiza o estado ao digitar
+          />
           <div className={styles.containerScroll}>
             <div className={styles.scrollbarBox}>
               {filteredFuncionarios.length > 0 ? (
-                filteredFuncionarios.map((func:IUser) => (
+                filteredFuncionarios.map((func: IUser) => (
                   <Func key={func.cpf} funcionario={func} />
                 ))
               ) : (
@@ -88,8 +94,6 @@ export function Func({ funcionario }: { funcionario: IUser }) {
   const router = useRouter();
   const handleEdit = () => router.push(`/editar-funcionario?cpf=${funcionario.cpf}`);
 
-
-
   return (
     <button className={styles.ClickableElementList} onClick={handleEdit}>
       <span>{funcionario.nome}</span>
@@ -97,4 +101,3 @@ export function Func({ funcionario }: { funcionario: IUser }) {
     </button>
   );
 }
-

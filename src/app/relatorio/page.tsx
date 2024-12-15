@@ -30,13 +30,6 @@ export default function Relatorio() {
   const [startDate, setStartDate] = useState(""); // Data inicial do filtro
   const [endDate, setEndDate] = useState(""); // Data final do filtro
 
-  // Função para formatar horas no formato hh:mm
-  const formatHour = (isoDate: string | null): string => {
-    if (!isoDate) return "N/A";
-    const date = new Date(isoDate);
-    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-  };
-
   // Buscar os dados dos funcionários da API
   useEffect(() => {
     async function fetchFuncionarios() {
@@ -74,8 +67,8 @@ export default function Relatorio() {
           user.email,
           user.cpf,
           hora.data,
-          formatHour(hora.checkIn),
-          formatHour(hora.checkOut),
+          hora.checkIn || "N/A",
+          hora.checkOut || "N/A",
         ])
       );
 
@@ -107,8 +100,8 @@ export default function Relatorio() {
           user.email,
           user.cpf,
           hora.data,
-          formatHour(hora.checkIn),
-          formatHour(hora.checkOut),
+          hora.checkIn || "N/A",
+          hora.checkOut || "N/A",
         ])
       );
 
