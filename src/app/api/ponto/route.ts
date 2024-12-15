@@ -18,8 +18,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
         // Validate input
         if (!tipo) {
             return NextResponse.json(
-            { error: "CPF e tipo are required." },
-            { status: 400 }
+            { error: "CPF e tipo são campos obrigatórios" },
+            { status: 500 }
             );
         }
     
@@ -28,7 +28,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
         const user = await findByCPF(cpf);
         if (!user) {
             return NextResponse.json(
-            { error: `No user found with CPF: ${cpf}` },
+            { error: `Nenhum usuário CPF: ${cpf} foi encontrado` },
             { status: 404 }
             );
         }
@@ -54,8 +54,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
         const tiposValidos = ["checkIn", "checkOut", "almocoIn", "almocoOut"];
         if (!tiposValidos.includes(tipo)) {
             return NextResponse.json(
-            { error: "Tipo inválido. Deve ser: checkIn, checkOut, almocoIn, almocoOut." },
-            { status: 400 }
+            { error: "Tipo inválido. Deve ser: checkIn, checkOut, almocoIn, almocoOut" },
+            { status: 500 }
             );
         }
     
@@ -65,12 +65,12 @@ export async function POST(req: NextRequest, res: NextResponse) {
         await updateByCPF(cpf, { Horas: user.Horas });
     
         return NextResponse.json({
-            message: "Horas registradas."
+            message: "Horas registradas"
         });
         } catch (error: any) {
         console.error(error);
         return NextResponse.json(
-            { error: "Something went wrong." },
+            { error: "Erro inesperado" },
             { status: 500 }
         );
     }

@@ -19,24 +19,24 @@ export async function userAlreadyExists(user: IUser): Promise<boolean>{
 }
 
 // Update: Update user details by CPF
-export async function updateByCPF(cpf: string, updateData: Partial<Document>) {
+export async function updateByCPF(cpf: string, updatedData: Partial<Document>) {
   try {
-    let { senha } = updateData;
+    let { senha } = updatedData;
     if (senha){
-      updateData.senha = await hash(senha, 10);
+      updatedData.senha = await hash(senha, 10);
     }
 
     const result = await usersCollection.updateOne(
       { cpf },
-      { $set: updateData }
+      { $set: updatedData }
     );
     if (result.matchedCount > 0) {
-      return { message: "User updated successfully" }
+      return { message: "Usuário atualizado com sucesso" }
     } else {
-      return { message: "No User found to be update" }
+      return { message: "Nenhum usuário foi encontrado para ser atualizado" }
     }
   } catch (error) {
-    console.error("Error updating User:", error);
+    console.error("Erro na atualização do usuário:", error);
   }
 }
 
@@ -45,12 +45,12 @@ export async function deleteByCPF(cpf: string) {
   try {
     const result = await usersCollection.deleteOne({ cpf });
     if (result.deletedCount > 0) {
-      console.log("User deleted successfully");
+      console.log("Usuário removido com sucesso");
     } else {
-      console.log("No User found to delete");
+      console.log("Nenhum usuário encontrado para ser removido");
     }
   } catch (error) {
-    console.error("Error deleting User:", error);
+    console.error("Erro na remoção do usuário:", error);
   }
 }
 
@@ -67,7 +67,7 @@ export async function listAll(): Promise<Array<Document>>{
 
     return users;
   } catch (error) {
-    console.error("Error retrieving Users:", error);
+    console.error("Erro na entrega dos usuários:", error);
     return [];
   }
 } 

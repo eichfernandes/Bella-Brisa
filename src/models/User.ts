@@ -45,7 +45,7 @@ class User{
 
   async save() {
     if (!this.id || !this.nome || !this.email || !this.cpf || !this.senha){
-      throw new Error("User has blank attributes.")
+      throw new Error("Usuário possui campos em branco")
     }
     if (await userAlreadyExists(this)){
       throw new Error("Funcionário com id ou cpf já existente.")

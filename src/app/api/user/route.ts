@@ -23,25 +23,27 @@ export async function POST(req: NextRequest) {
         await new User(userData).save();
         
         return NextResponse.json({
-            message: "User saved sucessfully"
+            message: "Usuário salvo com sucesso"
         })
     } catch (error: any) {
         return NextResponse.json(
             { message: error.message },
-            { status: 400 }
+            { status: 500 }
         )
     }
 }
 
 export async function PUT(req: NextRequest) {
     try {
-        const userData: IUser = await req.json()
-        console.log(userData.cpf)
-        const message = await updateByCPF(userData.cpf, userData)
+        const { cpf, updatedData } = await req.json()
+        const message = await updateByCPF(cpf, updatedData)
 
-        return NextResponse.json(message)
+        return NextResponse.json(message);
     } catch (error: any) {
-        return NextResponse.json({ error: 'Something went wrong.' })
+        return NextResponse.json(
+            { message: error.message },
+            { status: 500 }
+        )
     }
 }
 
@@ -52,10 +54,13 @@ export async function DELETE(req: NextRequest) {
         await deleteByCPF(cpf);
 
         return NextResponse.json({
-            message: "User removed successfully."
+            message: "Usuário removido com sucesso"
         })
     } catch (error: any) {
-        return NextResponse.json({ error: 'Something went wrong.' })
+        return NextResponse.json(
+            { message: error.message },
+            { status: 500 }
+        )
     }
 }
 

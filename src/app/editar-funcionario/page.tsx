@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import styles from "../page.module.css";
 import MaskedInput, { cpfMask } from "../Mask";
+import { pages } from "next/dist/build/templates/app-page";
 
 export default function Editar() {
   const [funcName, setFuncName] = useState(""); // Nome do funcionário
@@ -15,7 +16,7 @@ export default function Editar() {
   const [successMessage, setSuccessMessage] = useState(""); // Mensagem de sucesso
   const router = useRouter();
   const searchParams = useSearchParams();
-  const cpf = searchParams.get("cpf"); // Obtém o CPF dos parâmetros da URL
+  let cpf = searchParams.get("cpf"); // Obtém o CPF dos parâmetros da URL
 
   // Busca os dados do funcionário pelo CPF
   useEffect(() => {
@@ -50,20 +51,24 @@ export default function Editar() {
   const handleEdit = async () => {
     try {
       const updatedData = {
-        nome: funcName || undefined, // Mantém o valor atual se o campo estiver vazio
+        nome: funcName || undefined,
         cpf: funcCPF || undefined,
         senha: password || undefined,
-      };
+      }
 
-      const response = await fetch(`/api/user?cpf=${cpf}`, {
+      const response = await fetch(`/api/user`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updatedData),
+        body: JSON.stringify({ 
+          cpf,
+          updatedData
+        }),
       });
 
       if (response.ok) {
         setSuccessMessage("Funcionário atualizado com sucesso!");
         setErrorMessage("");
+        router.push("/controle");
       } else {
         setErrorMessage("Erro ao atualizar os dados do funcionário.");
       }
@@ -127,14 +132,12 @@ export default function Editar() {
               onChange={(e) => setFuncName(e.target.value)}
             />
             <br />
-            <MaskedInput
+            <input
               className={styles.input2}
               type="text"
-              maskFunction={cpfMask}
               placeholder="Novo CPF"
-              maxLength="14"
               value={funcCPF}
-              onChange={(e: any) => setFuncCPF(e.target.value)}
+              onChange={(e) => setFuncCPF(e.target.value)}
             />
             <br />
             <input

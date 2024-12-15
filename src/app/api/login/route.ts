@@ -6,7 +6,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
         const {id , senha} = await req.json();
         const token = await authenticate({id, senha})
         
-        const res = NextResponse.json({ message: 'Login successful' });
+        const res = NextResponse.json({ message: 'Login com sucesso' });
 
         res.cookies.set('token', token, {
         httpOnly: true, // Secure the cookie by making it inaccessible via JavaScript
@@ -18,12 +18,15 @@ export async function POST(req: NextRequest, res: NextResponse) {
         return res;
         
     } catch (error: any) {
-        return NextResponse.json({ error: error.message })
+        return NextResponse.json(
+            { message: error.message },
+            { status: 500 }
+        )
     }
 }
 
 export async function DELETE() {
-    const response = NextResponse.json({ message: 'Logged out successfully' });
+    const response = NextResponse.json({ message: 'Logout com sucesso' });
   
     // Delete the 'auth_token' cookie
     response.cookies.delete('token');
