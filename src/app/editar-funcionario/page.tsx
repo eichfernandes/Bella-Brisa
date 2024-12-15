@@ -122,11 +122,10 @@ export default function Editar() {
         <div className={styles.container}>
           <h1>EDIÇÃO DE FUNCIONÁRIO</h1>
           <h2>ID: {funcID || "Carregando..."}</h2>
-          <h2>Nome: {funcName || "Carregando..."}</h2>
-          <h2>CPF: {funcCPF || "Carregando..."}</h2>
-          <p>Para editar um dado, insira na tabela abaixo.<br />Valores em branco serão mantidos.</p>
+          <p>Para editar um dado, basta altera-lo abaixo e confirmar a edição.<br />Campos em branco serão ignorados e não serão alterados.</p>
 
           <div className={styles.ElementsBox}>
+            <h2>Nome</h2>
             <input
               className={styles.input2}
               type="text"
@@ -134,7 +133,7 @@ export default function Editar() {
               value={funcName}
               onChange={(e) => setFuncName(e.target.value)}
             />
-            <br />
+            <h2>CPF</h2>
             <input
               className={styles.input2}
               type="text"
@@ -142,7 +141,7 @@ export default function Editar() {
               value={funcCPF}
               onChange={(e) => setFuncCPF(e.target.value)}
             />
-            <br />
+            <h2>Email</h2>
             <input
               className={styles.input2}
               type="text"
@@ -150,7 +149,7 @@ export default function Editar() {
               value={funcEmail}
               onChange={(e) => setFuncEmail(e.target.value)}
             />
-            <br />
+            <h2>Senha</h2>
             <input
               className={styles.input2}
               type="password"
