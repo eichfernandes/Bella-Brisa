@@ -238,20 +238,22 @@ export default function Relatorio() {
           <div className={styles.dateFilters}>
             <input
               type="date"
+              className={styles.Date}
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
             />
             <input
               type="date"
+              className={styles.Date}
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
             />
           </div>
           <div className={styles.buttonGroup}>
-            <button className={styles.GenerateButton} onClick={generateGeneralPDF}>
+            <button className={styles.CheckButton2} onClick={generateGeneralPDF}>
               Gerar Relatório Geral
             </button>
-            <button className={styles.GenerateButton} onClick={generateFilteredPDF}>
+            <button className={styles.CheckButton2} onClick={generateFilteredPDF}>
               Gerar Relatório Filtrado
             </button>
           </div>
