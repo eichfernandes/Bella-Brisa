@@ -1,87 +1,128 @@
 "use client";
 
 import Image from "next/image";
-import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { jsPDF } from "jspdf";
+import React, { useEffect, useState } from "react";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 import styles from "../page.module.css";
 
-export default function RelatorioPage() {
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [employeeData, setEmployeeData] = useState<any>(null);
-  const [errorMessage, setErrorMessage] = useState("");
+// Definição da interface para tipar os dados
+export interface IUser {
+  id: string;
+  nome: string;
+  email: string;
+  cpf: string;
+  Horas: {
+    data: string;
+    checkIn: string | null; // Formato ISO ou Date
+    checkOut: string | null;
+    almocoIn: string | null;
+    almocoOut: string | null;
+  }[];
+}
 
+export default function Relatorio() {
   const router = useRouter();
+  const [funcionarios, setFuncionarios] = useState<IUser[]>([]); // Lista de funcionários
+  const [searchTerm, setSearchTerm] = useState(""); // Termo de busca
+  const [filterMode, setFilterMode] = useState(false); // Modo de filtro
+  const [startDate, setStartDate] = useState(""); // Data inicial do filtro
+  const [endDate, setEndDate] = useState(""); // Data final do filtro
 
-  // Função para buscar dados do funcionário
-  const fetchEmployeeData = async () => {
-    setErrorMessage(""); // Limpa mensagens de erro
-    try {
-      const response = await fetch(
-        `/api/employee/hours?startDate=${startDate}&endDate=${endDate}`
-      );
-      if (!response.ok) {
-        throw new Error("Erro ao buscar os dados do funcionário.");
-      }
-
-      const data = await response.json();
-      if (!data || !data.Horas) {
-        throw new Error("Dados retornados estão inválidos.");
-      }
-
-      setEmployeeData(data);
-    } catch (error: any) {
-      setErrorMessage(error.message);
-    }
+  // Função para formatar horas no formato hh:mm
+  const formatHour = (isoDate: string | null): string => {
+    if (!isoDate) return "N/A";
+    const date = new Date(isoDate);
+    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
 
-  // Geração do PDF com os dados do funcionário
-  const generatePDF = () => {
-    if (!startDate || !endDate) {
-      alert("Selecione as datas de início e fim.");
-      return;
-    }
-
-    if (!employeeData || !employeeData.Horas.length) {
-      alert("Nenhum registro encontrado para o período selecionado.");
-      return;
-    }
-
-    const doc = new jsPDF();
-    const { id, nome, cpf, Horas } = employeeData;
-
-    // Cabeçalho do relatório
-    doc.setFontSize(16);
-    doc.text("Relatório de Horas do Funcionário", 10, 10);
-
-    doc.setFontSize(12);
-    doc.text(`ID: ${id}`, 10, 20);
-    doc.text(`Nome: ${nome}`, 10, 30);
-    doc.text(`CPF: ${cpf}`, 10, 40);
-    doc.text(`Período: ${startDate} até ${endDate}`, 10, 50);
-
-    // Adicionando tabela de Horas
-    let y = 60;
-    doc.text("Data          Entrada     Saída       Almoço Início   Almoço Fim", 10, y);
-    y += 10;
-
-    Horas.forEach((hora: any) => {
-      const row = `${hora.data}   ${hora.checkIn}   ${hora.checkOut}   ${hora.almocoIn}   ${hora.almocoOut}`;
-      doc.text(row, 10, y);
-      y += 10;
-    });
-
-    // Salvar PDF
-    doc.save(`Relatorio_${id}_${startDate}_a_${endDate}.pdf`);
-  };
-
-  // Atualiza os dados quando as datas são alteradas
+  // Buscar os dados dos funcionários da API
   useEffect(() => {
-    if (startDate && endDate) {
-      fetchEmployeeData();
+    async function fetchFuncionarios() {
+      try {
+        const response = await fetch("/api/user"); // Chamada à API de listagem
+        if (response.ok) {
+          const data = await response.json();
+          setFuncionarios(data.users || []); // Os usuários são retornados na propriedade "users"
+        } else {
+          console.error("Erro ao buscar os funcionários.");
+        }
+      } catch (error) {
+        console.error("Erro ao conectar com a API:", error);
+      }
     }
-  }, [startDate, endDate]);
+
+    fetchFuncionarios();
+  }, []);
+
+  // Filtrar funcionários com base no termo de pesquisa
+  const filteredFuncionarios = funcionarios.filter((func) =>
+    func.nome.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Gerar relatório geral
+  const handleDownloadReport = async () => {
+    try {
+      const doc = new jsPDF();
+      doc.text("Relatório Geral de Funcionários", 10, 10);
+
+      const tableData = funcionarios.flatMap((user: IUser) =>
+        user.Horas.map((hora) => [
+          user.id,
+          user.nome,
+          user.email,
+          user.cpf,
+          hora.data,
+          formatHour(hora.checkIn),
+          formatHour(hora.checkOut),
+        ])
+      );
+
+      (doc as any).autoTable({
+        head: [["ID", "Nome", "Email", "CPF", "Data", "Check-In", "Check-Out"]],
+        body: tableData,
+        startY: 20,
+      });
+
+      doc.save("Relatorio_Geral.pdf");
+    } catch (error) {
+      console.error("Erro ao gerar o relatório:", error);
+    }
+  };
+
+  // Gerar relatório filtrado por data
+  const handleDownloadFilteredReport = async () => {
+    try {
+      const doc = new jsPDF();
+      doc.text("Relatório Filtrado de Funcionários", 10, 10);
+
+      const filteredData = funcionarios.flatMap((user: IUser) =>
+        user.Horas.filter(
+          (hora) =>
+            hora.data >= startDate && hora.data <= endDate // Filtro por data
+        ).map((hora) => [
+          user.id,
+          user.nome,
+          user.email,
+          user.cpf,
+          hora.data,
+          formatHour(hora.checkIn),
+          formatHour(hora.checkOut),
+        ])
+      );
+
+      (doc as any).autoTable({
+        head: [["ID", "Nome", "Email", "CPF", "Data", "Check-In", "Check-Out"]],
+        body: filteredData,
+        startY: 20,
+      });
+
+      doc.save("Relatorio_Filtrado.pdf");
+    } catch (error) {
+      console.error("Erro ao gerar o relatório filtrado:", error);
+    }
+  };
 
   return (
     <div className={styles.page}>
@@ -89,101 +130,99 @@ export default function RelatorioPage() {
         <Image
           className={styles.logo}
           src="/bellabrisa.svg"
-          alt="Next.js logo"
+          alt="Logo"
           width={70}
           height={70}
           style={{ marginBottom: 15 }}
           priority
         />
       </header>
-
-      {/* Formulário de seleção de datas */}
       <main className={styles.main}>
         <div className={styles.container}>
-          <h1>GERAÇÃO DE RELATÓRIOS</h1>
-          <h2>
-            Selecione uma data de início<br/>e fim para filtragem do relatório.
-          </h2>
-          <div className={styles.ElementsBox}>
-            <label htmlFor="start-date" className={styles.defaultTextSize}>
-              Início do Relatório:
-            </label>
-            <input
-              id="start-date"
-              type="date"
-              className={styles.Date}
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-            /><br/>
-
-            <label htmlFor="end-date" className={styles.defaultTextSize}>
-              Fim do Relatório:
-            </label>
-            <input
-              id="end-date"
-              type="date"
-              className={styles.Date}
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-            />
-
-            <button className={styles.inputButton2} onClick={generatePDF}>
-              Gerar PDF
-            </button>
-          </div>
-
-          {/* Exibição de erro */}
-          {errorMessage && (
-            <p className={`${styles.errorText} ${styles.TextBox}`}>
-              {errorMessage}
-            </p>
+          {!filterMode ? (
+            <>
+              <h1>Relatório de Funcionários</h1>
+              <h2>Selecione um funcionário ou baixe o relatório geral:</h2>
+              <input
+                type="text"
+                className={styles.SearchBar}
+                placeholder="Pesquisar funcionário"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <div className={styles.containerScroll}>
+                <div className={styles.scrollbarBox}>
+                  {filteredFuncionarios.length > 0 ? (
+                    filteredFuncionarios.map((func) => (
+                      <Func
+                        key={func.cpf}
+                        funcionario={func}
+                      />
+                    ))
+                  ) : (
+                    <p>Nenhum funcionário encontrado.</p>
+                  )}
+                </div>
+              </div>
+              <button
+                className={styles.CheckButton2}
+                onClick={handleDownloadReport}
+              >
+                Baixar Relatório Geral
+              </button>
+              <button
+                className={styles.CheckButton2}
+                onClick={() => setFilterMode(true)}
+              >
+                Filtrar por Data
+              </button>
+            </>
+          ) : (
+            <>
+              <h1>Filtrar Relatório</h1>
+              <div className={styles.dateInputs}>
+                <input
+                  type="date"
+                  className={styles.input}
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                />
+                <input
+                  type="date"
+                  className={styles.input}
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                />
+              </div>
+              <button
+                className={styles.CheckButton2}
+                onClick={handleDownloadFilteredReport}
+              >
+                Baixar Relatório Filtrado
+              </button>
+              <button
+                className={styles.ExitButton}
+                onClick={() => setFilterMode(false)}
+              >
+                Voltar
+              </button>
+            </>
           )}
         </div>
-
-        {/* Exibição dos dados */}
-        {employeeData && (
-          <div className={styles.container}>
-            <h2>Dados do Funcionário</h2>
-            <p>
-              <strong>ID:</strong> {employeeData.id}
-            </p>
-            <p>
-              <strong>Nome:</strong> {employeeData.nome}
-            </p>
-            <p>
-              <strong>CPF:</strong> {employeeData.cpf}
-            </p>
-            <h3>Registros de Horas</h3>
-            <div className={styles.containerScroll}>
-              <div className={styles.scrollbarBox}>
-                {employeeData.Horas.map((hora: any, index: number) => (
-                  <div key={index} className={styles.ClickableElementList}>
-                    <div className={styles.Left}>
-                      <p>Data: {hora.data}</p>
-                      <p>Entrada: {hora.checkIn}</p>
-                      <p>Saída: {hora.checkOut}</p>
-                    </div>
-                    <div className={styles.Right}>
-                      <p>Almoço Início: {hora.almocoIn}</p>
-                      <p>Almoço Fim: {hora.almocoOut}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
       </main>
-
-      <footer>
-        <button
-          type="button"
-          className={styles.ExitButton}
-          onClick={() => router.push("/rh")}
-        >
-          Voltar
-        </button>
-      </footer>
     </div>
+  );
+}
+
+export function Func({
+  funcionario,
+}: {
+  funcionario: IUser;
+}) {
+  return (
+    <button className={styles.ClickableElementList}>
+      <span>{funcionario.nome}</span>
+      <span>ID {funcionario.id}</span>
+    </button>
   );
 }

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { IUser, User } from "@/models/User";
 import { deleteByCPF, findByCPF, listAll, updateByCPF } from "@/services/User";
 
+
 export async function GET(req: NextRequest, res: NextResponse) {
     const cpf = req.nextUrl.searchParams.get('cpf')
     if (cpf){
@@ -62,5 +63,6 @@ export async function DELETE(req: NextRequest) {
             { status: 500 }
         )
     }
+
 }
 

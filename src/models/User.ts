@@ -43,6 +43,8 @@ class User{
     this.Horas = [];
   }
 
+  
+
   async save() {
     if (!this.id || !this.nome || !this.email || !this.cpf || !this.senha){
       throw new Error("Usuário possui campos em branco")
@@ -77,7 +79,19 @@ class User{
     .setExpirationTime('1h')  // Set expiration time
     .sign(new TextEncoder().encode(process.env.JWT_SECRET));
   }
+
+ async formatHoursForPDF() {
+    return this.Horas.map((hora) => ({
+      Data: hora.data,
+      CheckIn: hora.checkIn ? hora.checkIn.toISOString() : "N/A",
+      CheckOut: hora.checkOut ? hora.checkOut.toISOString() : "N/A",
+      AlmocoIn: hora.almocoIn ? hora.almocoIn.toISOString() : "N/A",
+      AlmocoOut: hora.almocoOut ? hora.almocoOut.toISOString() : "N/A",
+    }));
+  }
 }
+
+
 
 
 export { User };
