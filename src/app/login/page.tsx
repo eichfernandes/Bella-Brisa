@@ -17,16 +17,21 @@ export default function LoginPage() {
     const cpf = formData.get('cpf');
     const senha = formData.get('senha');
 
-    const response = await fetch('/api/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: cpf, senha }),
-    });
+    try {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: cpf, senha }),
+      });
 
-    if (response.ok) {
-      router.push('/rh');
-    } else {
-      setErrorMessage('Erro de Login: Identificador ou Senha incorretos.');
+      if (response.ok) {
+        router.push('/rh');
+      } else {
+        const errorResponse = await response.json();
+        setErrorMessage(errorResponse.message || 'Erro de Login: Identificador ou Senha incorretos.');
+      }
+    } catch (error) {
+      setErrorMessage('Erro inesperado ao tentar realizar o login.');
     }
   }
 
@@ -49,7 +54,7 @@ export default function LoginPage() {
             <input
               className={styles.input}
               type="text"
-              name="cpf" // Alterado para coincidir com o FormData
+              name="cpf"
               placeholder="Identificador"
               value={userId}
               onChange={(e) => setUserId(e.target.value)}
