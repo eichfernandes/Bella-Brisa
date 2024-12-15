@@ -11,6 +11,7 @@ export default function Editar() {
   const [funcName, setFuncName] = useState(""); // Nome do funcionário
   const [funcCPF, setFuncCPF] = useState(""); // CPF do funcionário
   const [funcID, setFuncID] = useState(""); // ID do funcionário
+  const [funcEmail, setFuncEmail] = useState(""); // Email do funcionário
   const [password, setPassword] = useState(""); // Nova senha do funcionário
   const [errorMessage, setErrorMessage] = useState(""); // Mensagem de erro
   const [successMessage, setSuccessMessage] = useState(""); // Mensagem de sucesso
@@ -138,6 +139,14 @@ export default function Editar() {
               placeholder="Novo CPF"
               value={funcCPF}
               onChange={(e) => setFuncCPF(e.target.value)}
+            />
+            <br />
+            <input
+              className={styles.input2}
+              type="text"
+              placeholder="Novo Email"
+              value={funcEmail}
+              onChange={(e) => setFuncEmail(e.target.value)}
             />
             <br />
             <input
