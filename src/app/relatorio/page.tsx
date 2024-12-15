@@ -235,32 +235,35 @@ export default function Relatorio() {
               ))}
             </div>
           </div>
-          <div className={styles.dateFilters}>
-            <input
-              type="date"
-              className={styles.Date}
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-            />
-            <input
-              type="date"
-              className={styles.Date}
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-            />
-          </div>
-          <div className={styles.buttonGroup}>
+          
             <button className={styles.CheckButton2} onClick={generateGeneralPDF}>
               Gerar Relatório Geral
             </button>
+            <br/>
+            <br/>
+            <h1>FILTRAGEM DE RELATÓRIO</h1>
+            <h2>Para filtragem de relatório, insira nos campos abaixo as datas de<br/>início e fim, respectivamente, do período desejado.</h2>
+            <div className={styles.dateFilters}>
+              <input
+                type="date"
+                className={styles.Date}
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+              />
+              <input
+                type="date"
+                className={styles.Date}
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+              />
+            </div>
             <button className={styles.CheckButton2} onClick={generateFilteredPDF}>
               Gerar Relatório Filtrado
             </button>
-          </div>
-          <button className={styles.ExitButton} onClick={() => router.push("/rh")}>
-            Voltar
-          </button>
         </div>
+        <button className={styles.ExitButton} onClick={() => router.push("/rh")}>
+          Voltar
+        </button>
       </main>
     </div>
   );
