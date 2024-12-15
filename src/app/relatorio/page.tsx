@@ -141,7 +141,7 @@ export default function Relatorio() {
         <div className={styles.container}>
           {!filterMode ? (
             <>
-              <h1>Relatório de Funcionários</h1>
+              <h1>RELATÓRIO DE FUNCIONÁRIOS</h1>
               <h2>Selecione um funcionário ou baixe o relatório geral:</h2>
               <input
                 type="text"
@@ -174,25 +174,28 @@ export default function Relatorio() {
                 className={styles.CheckButton2}
                 onClick={() => setFilterMode(true)}
               >
-                Filtrar por Data
+                Relatório Filtrado por Data
               </button>
             </>
           ) : (
             <>
-              <h1>Filtrar Relatório</h1>
+              <h1>RELATÓRIO FILTRADO</h1>
+              <h2>Selecione uma data de início<br/>e fim para filtragem do relatório.</h2>
               <div className={styles.dateInputs}>
+                <span className={styles.defaultTextSize}>Início do relatório:</span>
                 <input
                   type="date"
                   className={styles.input}
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
-                />
+                /><br/>
+                <span className={styles.defaultTextSize}>Fim do relatório:</span>
                 <input
                   type="date"
                   className={styles.input}
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
-                />
+                /><br/>
               </div>
               <button
                 className={styles.CheckButton2}
@@ -201,14 +204,20 @@ export default function Relatorio() {
                 Baixar Relatório Filtrado
               </button>
               <button
-                className={styles.ExitButton}
+                className={styles.CheckButton2}
                 onClick={() => setFilterMode(false)}
               >
-                Voltar
+                Relatório sem Filtragem
               </button>
             </>
           )}
         </div>
+        <button
+          className={styles.ExitButton}
+          onClick={() => router.push("/rh")}
+        >
+          Voltar
+        </button>
       </main>
     </div>
   );
