@@ -111,7 +111,7 @@ export default function Ponto() {
       <main className={styles.main}>
         <div className={styles.container}>
           <h1>REGISTRO DE PONTO</h1>
-          <br />
+          <br/>
           {errorMessage && <p className={styles.errorText}>{errorMessage}</p>}
           {stage === "loading" && (
             <div className={styles.TextBox}>
