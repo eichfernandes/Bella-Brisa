@@ -7,7 +7,7 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import styles from "../page.module.css";
 
-// Definição da interface para tipar os dados
+// Interface dos dados
 export interface IUser {
   id: string;
   nome: string;
@@ -15,7 +15,7 @@ export interface IUser {
   cpf: string;
   Horas: {
     data: string;
-    checkIn: string | null; // Formato ISO ou Date
+    checkIn: string | null;
     checkOut: string | null;
     almocoIn: string | null;
     almocoOut: string | null;
@@ -24,104 +24,119 @@ export interface IUser {
 
 export default function Relatorio() {
   const router = useRouter();
-  const [funcionarios, setFuncionarios] = useState<IUser[]>([]); // Lista de funcionários
-  const [searchTerm, setSearchTerm] = useState(""); // Termo de busca
-  const [filterMode, setFilterMode] = useState(false); // Modo de filtro
-  const [startDate, setStartDate] = useState(""); // Data inicial do filtro
-  const [endDate, setEndDate] = useState(""); // Data final do filtro
+  const [funcionarios, setFuncionarios] = useState<IUser[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterMode, setFilterMode] = useState(false);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
-  // Função para formatar horas no formato hh:mm
-  const formatHour = (isoDate: string | null): string => {
-    if (!isoDate) return "N/A";
-    const date = new Date(isoDate);
-    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-  };
-
-  // Buscar os dados dos funcionários da API
   useEffect(() => {
     async function fetchFuncionarios() {
       try {
-        const response = await fetch("/api/user"); // Chamada à API de listagem
+        const response = await fetch("/api/user");
         if (response.ok) {
           const data = await response.json();
-          setFuncionarios(data.users || []); // Os usuários são retornados na propriedade "users"
+          setFuncionarios(data.users || []);
         } else {
-          console.error("Erro ao buscar os funcionários.");
+          console.error("Erro ao buscar funcionários.");
         }
       } catch (error) {
         console.error("Erro ao conectar com a API:", error);
       }
     }
-
     fetchFuncionarios();
   }, []);
 
-  // Filtrar funcionários com base no termo de pesquisa
   const filteredFuncionarios = funcionarios.filter((func) =>
     func.nome.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Gerar relatório geral
-  const handleDownloadReport = async () => {
-    try {
-      const doc = new jsPDF();
-      doc.text("Relatório Geral de Funcionários", 10, 10);
+  // Função para gerar PDF individual
+  const handleGenerateEmployeeReport = (user: IUser) => {
+    const doc = new jsPDF();
+    doc.text(`Relatório Detalhado de ${user.nome}`, 10, 10);
+    doc.text(`ID: ${user.id}`, 10, 20);
+    doc.text(`CPF: ${user.cpf}`, 10, 30);
 
-      const tableData = funcionarios.flatMap((user: IUser) =>
-        user.Horas.map((hora) => [
-          user.id,
-          user.nome,
-          user.email,
-          user.cpf,
-          hora.data,
-          formatHour(hora.checkIn),
-          formatHour(hora.checkOut),
-        ])
-      );
+    const tableData = user.Horas.map((hora) => [
+      hora.data || "FALTA",
+      formatHour(hora.checkIn),
+      formatHour(hora.checkOut),
+      formatHour(hora.almocoIn),
+      formatHour(hora.almocoOut),
+    ]);
 
-      (doc as any).autoTable({
-        head: [["ID", "Nome", "Email", "CPF", "Data", "Check-In", "Check-Out"]],
-        body: tableData,
-        startY: 20,
-      });
+    (doc as any).autoTable({
+      head: [["Data", "Entrada", "Saída", "Entrada Almoço", "Saída Almoço"]],
+      body: tableData,
+      startY: 40,
+      theme: "grid",
+      styles: { fontSize: 8, halign: "center" },
+    });
 
-      doc.save("Relatorio_Geral.pdf");
-    } catch (error) {
-      console.error("Erro ao gerar o relatório:", error);
-    }
+    doc.save(`Relatorio_${user.nome.replace(/ /g, "_")}.pdf`);
   };
 
-  // Gerar relatório filtrado por data
-  const handleDownloadFilteredReport = async () => {
-    try {
-      const doc = new jsPDF();
-      doc.text("Relatório Filtrado de Funcionários", 10, 10);
+  // Função para gerar relatório geral
+  const handleDownloadGeneralReport = () => {
+    const doc = new jsPDF();
+    doc.text("Relatório Geral de Funcionários", 10, 10);
 
-      const filteredData = funcionarios.flatMap((user: IUser) =>
-        user.Horas.filter(
-          (hora) =>
-            hora.data >= startDate && hora.data <= endDate // Filtro por data
-        ).map((hora) => [
-          user.id,
-          user.nome,
-          user.email,
-          user.cpf,
-          hora.data,
-          formatHour(hora.checkIn),
-          formatHour(hora.checkOut),
-        ])
-      );
+    const tableData = funcionarios.flatMap((user) =>
+      user.Horas.map((hora) => [
+        user.id,
+        user.nome,
+        hora.data || "FALTA",
+        formatHour(hora.checkIn),
+        formatHour(hora.checkOut),
+        formatHour(hora.almocoIn),
+        formatHour(hora.almocoOut),
+      ])
+    );
 
-      (doc as any).autoTable({
-        head: [["ID", "Nome", "Email", "CPF", "Data", "Check-In", "Check-Out"]],
-        body: filteredData,
-        startY: 20,
-      });
+    (doc as any).autoTable({
+      head: [
+        ["ID", "Nome", "Data", "Entrada", "Saída", "Entrada Almoço", "Saída Almoço"],
+      ],
+      body: tableData,
+      startY: 20,
+      theme: "grid",
+      styles: { fontSize: 8, halign: "center" },
+    });
 
-      doc.save("Relatorio_Filtrado.pdf");
-    } catch (error) {
-      console.error("Erro ao gerar o relatório filtrado:", error);
-    }
+    doc.save("Relatorio_Geral.pdf");
+  };
+
+  // Função para gerar relatório filtrado
+  const handleDownloadFilteredReport = () => {
+    const doc = new jsPDF();
+    doc.text("Relatório Filtrado de Funcionários", 10, 10);
+
+    const tableData = funcionarios.flatMap((user) =>
+      user.Horas.filter(
+        (hora) => hora.data >= startDate && hora.data <= endDate
+      ).map((hora) => [
+        user.id,
+        user.nome,
+        hora.data || "FALTA",
+        formatHour(hora.checkIn),
+        formatHour(hora.checkOut),
+        formatHour(hora.almocoIn),
+        formatHour(hora.almocoOut),
+      ])
+    );
+
+    (doc as any).autoTable({
+      head: [
+        ["ID", "Nome", "Data", "Entrada", "Saída", "Entrada Almoço", "Saída Almoço"],
+      ],
+      body: tableData,
+      startY: 20,
+      theme: "grid",
+      styles: { fontSize: 8, halign: "center" },
+    });
+
+    doc.save("Relatorio_Filtrado.pdf");
   };
 
   return (
@@ -133,70 +148,61 @@ export default function Relatorio() {
           alt="Logo"
           width={70}
           height={70}
-          style={{ marginBottom: 15 }}
           priority
         />
       </header>
       <main className={styles.main}>
         <div className={styles.container}>
-          {!filterMode ? (
+          <h1>RELATÓRIO DETALHADO DE FUNCIONÁRIOS</h1>
+          <h2>Lista de Funcionários</h2>
+          <input
+            type="text"
+            className={styles.SearchBar}
+            placeholder="Pesquisar funcionário"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <div className={styles.containerScroll}>
+            <div className={styles.scrollbarBox}>
+              {filteredFuncionarios.length > 0 ? (
+                filteredFuncionarios.map((func) => (
+                  <Func
+                    key={func.id}
+                    funcionario={func}
+                    onClick={() => handleGenerateEmployeeReport(func)}
+                  />
+                ))
+              ) : (
+                <p>Nenhum funcionário encontrado.</p>
+              )}
+            </div>
+          </div>
+          <button
+            className={styles.CheckButton2}
+            onClick={handleDownloadGeneralReport}
+          >
+            Baixar Relatório Geral
+          </button>
+          <button
+            className={styles.CheckButton2}
+            onClick={() => setFilterMode(true)}
+          >
+            Relatório Filtrado
+          </button>
+          {filterMode && (
             <>
-              <h1>RELATÓRIO DE FUNCIONÁRIOS</h1>
-              <h2>Selecione um funcionário ou baixe o relatório geral:</h2>
               <input
-                type="text"
-                className={styles.SearchBar}
-                placeholder="Pesquisar funcionário"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                type="date"
+                className={styles.input}
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
               />
-              <div className={styles.containerScroll}>
-                <div className={styles.scrollbarBox}>
-                  {filteredFuncionarios.length > 0 ? (
-                    filteredFuncionarios.map((func) => (
-                      <Func
-                        key={func.cpf}
-                        funcionario={func}
-                      />
-                    ))
-                  ) : (
-                    <p>Nenhum funcionário encontrado.</p>
-                  )}
-                </div>
-              </div>
-              <button
-                className={styles.CheckButton2}
-                onClick={handleDownloadReport}
-              >
-                Baixar Relatório Geral
-              </button>
-              <button
-                className={styles.CheckButton2}
-                onClick={() => setFilterMode(true)}
-              >
-                Relatório Filtrado por Data
-              </button>
-            </>
-          ) : (
-            <>
-              <h1>RELATÓRIO FILTRADO</h1>
-              <h2>Selecione uma data de início<br/>e fim para filtragem do relatório.</h2>
-              <div className={styles.dateInputs}>
-                <span className={styles.defaultTextSize}>Início do relatório:</span>
-                <input
-                  type="date"
-                  className={styles.input}
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                /><br/>
-                <span className={styles.defaultTextSize}>Fim do relatório:</span>
-                <input
-                  type="date"
-                  className={styles.input}
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
-                /><br/>
-              </div>
+              <input
+                type="date"
+                className={styles.input}
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+              />
               <button
                 className={styles.CheckButton2}
                 onClick={handleDownloadFilteredReport}
@@ -204,20 +210,17 @@ export default function Relatorio() {
                 Baixar Relatório Filtrado
               </button>
               <button
-                className={styles.CheckButton2}
+                className={styles.ExitButton}
                 onClick={() => setFilterMode(false)}
               >
-                Relatório sem Filtragem
+                Voltar
               </button>
             </>
           )}
+          <button className={styles.ExitButton} onClick={() => router.push("/rh")}>
+            Voltar
+          </button>
         </div>
-        <button
-          className={styles.ExitButton}
-          onClick={() => router.push("/rh")}
-        >
-          Voltar
-        </button>
       </main>
     </div>
   );
@@ -225,13 +228,20 @@ export default function Relatorio() {
 
 export function Func({
   funcionario,
+  onClick,
 }: {
   funcionario: IUser;
+  onClick: () => void;
 }) {
   return (
-    <button className={styles.ClickableElementList}>
+    <button className={styles.ClickableElementList} onClick={onClick}>
       <span>{funcionario.nome}</span>
       <span>ID {funcionario.id}</span>
     </button>
   );
 }
+
+const formatHour = (time: string | null) =>
+  time
+    ? new Date(time).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+    : "FALTA";
