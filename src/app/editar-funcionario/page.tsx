@@ -31,6 +31,7 @@ export default function Editar() {
           if (user) {
             setFuncName(user.nome || "");
             setFuncCPF(user.cpf || "");
+            setFuncEmail(user.email || "");
             setFuncID(user.id || "");
           } else {
             setErrorMessage("Funcionário não encontrado.");
@@ -54,6 +55,7 @@ export default function Editar() {
       const updatedData = {
         nome: funcName || undefined,
         cpf: funcCPF || undefined,
+        email: funcEmail || undefined,
         senha: password || undefined,
       }
 
