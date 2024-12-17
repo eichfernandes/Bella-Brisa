@@ -14,20 +14,19 @@ export default function Editar() {
   const [password, setPassword] = useState(""); // Nova senha do funcionário
   const [errorMessage, setErrorMessage] = useState(""); // Mensagem de erro
   const [successMessage, setSuccessMessage] = useState(""); // Mensagem de sucesso
+  const [cpf, setCpf] = useState<string | null>(null); // CPF do funcionário vindo da URL
   const router = useRouter();
-  const searchParams = useSearchParams();
-  
-  const [cpf, setCpf] = useState<string | null>(null); // Armazena o CPF dos parâmetros da URL
-  
-  // A lógica para pegar o cpf deve ser feita dentro de um useEffect para evitar problemas com SSR
+  const searchParams = useSearchParams(); // Para capturar os parâmetros da URL
+
+  // Buscando o CPF apenas quando o componente é montado no cliente
   useEffect(() => {
     const cpfParam = searchParams.get("cpf");
     if (cpfParam) {
-      setCpf(cpfParam);
+      setCpf(cpfParam); // Atualiza o estado com o CPF
     }
-  }, [searchParams]);
+  }, [searchParams]); // Reexecuta quando os parâmetros mudam
 
-  // Busca os dados do funcionário pelo CPF
+  // Busca os dados do funcionário apenas se o CPF estiver disponível
   useEffect(() => {
     if (cpf) {
       async function fetchFuncionario() {
@@ -55,7 +54,7 @@ export default function Editar() {
 
       fetchFuncionario();
     }
-  }, [cpf]);
+  }, [cpf]); // Refaz a busca quando o CPF mudar
 
   // Função para editar os dados do funcionário
   const handleEdit = async () => {
@@ -65,7 +64,7 @@ export default function Editar() {
         cpf: funcCPF || undefined,
         email: funcEmail || undefined,
         senha: password || undefined,
-      }
+      };
 
       const response = await fetch(`/api/user`, {
         method: "PUT",
