@@ -192,7 +192,8 @@ export default function Relatorio() {
         formatDecimalToHours(calculateHoursWorked(hora.checkIn, hora.checkOut)),
         formatHour(hora.almocoIn),
         formatHour(hora.almocoOut),
-        formatDecimalToHours(calculateLunchDuration(hora.almocoIn, hora.almocoOut)),
+        //formatDecimalToHours(calculateLunchDuration(hora.almocoIn, hora.almocoOut)),
+        calculateInconsistency(hora.checkIn, hora.checkOut),
         formatDecimalToHours(calculateInconsistency(hora.checkIn, hora.checkOut)),
       ]);
   
@@ -418,14 +419,26 @@ const calculateLunchDuration = (almocoIn: string | null, almocoOut: string | nul
 
 const calculateInconsistency = (checkIn: string | null, checkOut: string | null) => {
   const worked = calculateHoursWorked(checkIn, checkOut);
-  const expected = 8;
-  return worked - expected;
+  const expected = -8;
+  const inconsistency = expected + worked;
+  return inconsistency;
 };
 
 const formatDecimalToHours = (decimalHours: number): string => {
-  const hours = Math.floor(decimalHours);
-  const minutes = Math.round((decimalHours - hours) * 60);
-  return `${hours}h${minutes.toString().padStart(2, "0")}m`;
+  const isNegative = decimalHours < 0;
+  decimalHours = Math.abs(decimalHours);
+
+  let hours = Math.floor(decimalHours);
+  let minutes = Math.round((decimalHours - hours) * 60);
+
+  if(minutes === 60){
+    minutes = 0;
+    hours += 1;
+  }
+
+  const formattedTime = `${isNegative ? '-' : ''}${hours}h${minutes.toString().padStart(2, '0')}m`;
+
+  return formattedTime;
 };
 
 const calculateTotalHours = (horas: any[]) =>
