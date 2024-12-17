@@ -4,8 +4,6 @@ import Image from "next/image";
 import { useSearchParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import styles from "../page.module.css";
-import MaskedInput, { cpfMask } from "../Mask";
-import { pages } from "next/dist/build/templates/app-page";
 
 export default function Editar() {
   const [funcName, setFuncName] = useState(""); // Nome do funcionário
@@ -17,37 +15,46 @@ export default function Editar() {
   const [successMessage, setSuccessMessage] = useState(""); // Mensagem de sucesso
   const router = useRouter();
   const searchParams = useSearchParams();
-  let cpf = searchParams.get("cpf"); // Obtém o CPF dos parâmetros da URL
+
+  const [cpf, setCpf] = useState<string | null>(null);
+
+  useEffect(() => {
+    const cpfParam = searchParams.get("cpf");
+    if (cpfParam) {
+      setCpf(cpfParam);
+    }
+  }, [searchParams]);
 
   // Busca os dados do funcionário pelo CPF
   useEffect(() => {
-    async function fetchFuncionario() {
-      try {
-        const response = await fetch(`/api/user?cpf=${cpf}`);
-        if (response.ok) {
-          const data = await response.json();
-          const user = data.user;
-
-          if (user) {
-            setFuncName(user.nome || "");
-            setFuncCPF(user.cpf || "");
-            setFuncEmail(user.email || "");
-            setFuncID(user.id || "");
-          } else {
-            setErrorMessage("Funcionário não encontrado.");
-          }
-        } else {
-          setErrorMessage("Erro ao buscar os dados do funcionário.");
-        }
-      } catch (error) {
-        setErrorMessage("Erro ao conectar com a API.");
-      }
-    }
-
     if (cpf) {
+      async function fetchFuncionario() {
+        try {
+          const response = await fetch(`/api/user?cpf=${cpf}`);
+          if (response.ok) {
+            const data = await response.json();
+            const user = data.user;
+  
+            if (user) {
+              setFuncName(user.nome || "");
+              setFuncCPF(user.cpf || "");
+              setFuncEmail(user.email || "");
+              setFuncID(user.id || "");
+            } else {
+              setErrorMessage("Funcionário não encontrado.");
+            }
+          } else {
+            setErrorMessage("Erro ao buscar os dados do funcionário.");
+          }
+        } catch (error) {
+          setErrorMessage("Erro ao conectar com a API.");
+        }
+      }
+  
       fetchFuncionario();
     }
   }, [cpf]);
+  
 
   // Função para editar os dados do funcionário
   const handleEdit = async () => {
