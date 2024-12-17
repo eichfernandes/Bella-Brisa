@@ -169,7 +169,7 @@ export default function Relatorio() {
     }
   
     // Gera a tabela para cada funcionário
-    filteredFuncionarios.sort((a, b) => a.id - b.id).forEach((user, index) => {
+    filteredFuncionarios.sort((a, b) => Number(a.id) - Number(b.id)).forEach((user, index) => {
       if (index !== 0) yOffset += 10; // Espaço entre as seções
   
       doc.setFontSize(12);

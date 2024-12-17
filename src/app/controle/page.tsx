@@ -65,7 +65,7 @@ export default function Gerenciamento() {
           <div className={styles.containerScroll}>
             <div className={styles.scrollbarBox}>
               {filteredFuncionarios.length > 0 ? (
-                filteredFuncionarios.sort((a, b) => a.id - b.id).map((func: IUser) => (
+                filteredFuncionarios.sort((a, b) => Number(a.id) - Number(b.id)).map((func: IUser) => (
                   <Func key={func.cpf} funcionario={func} />
                 ))
               ) : (
