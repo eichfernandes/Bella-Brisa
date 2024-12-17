@@ -3,7 +3,7 @@ import { IUser, User } from "@/models/User";
 import { deleteByCPF, findByCPF, listAll, updateByCPF } from "@/services/User";
 
 
-export async function GET(req: NextRequest, res: NextResponse) {
+export async function GET(req: NextRequest) {
     const cpf = req.nextUrl.searchParams.get('cpf')
     if (cpf){
         const user = await findByCPF(cpf)

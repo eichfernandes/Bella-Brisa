@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { findByCPF, updateByCPF } from "@/services/User";
 import { getCpfByToken } from "@/services/Auth";
 
-export async function GET(req: NextRequest, res: NextResponse) {
+export async function GET(req: NextRequest) {
     const cpf = await getCpfByToken(req);
     const user = await findByCPF(cpf)
     return NextResponse.json({
@@ -10,7 +10,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
     })
 }
 
-export async function POST(req: NextRequest, res: NextResponse) {
+export async function POST(req: NextRequest) {
     try {
         const cpf = await getCpfByToken(req);
         const { tipo } = await req.json();
