@@ -93,7 +93,7 @@ interface HorasProps {
   returnTime: Date | null;
 }
 
-export function Horas({
+function Horas({
   currentStage,
   checkinTime,
   intervalStartTime,

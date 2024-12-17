@@ -90,7 +90,7 @@ export default function Gerenciamento() {
   );
 }
 
-export function Func({ funcionario }: { funcionario: IUser }) {
+function Func({ funcionario }: { funcionario: IUser }) {
   const router = useRouter();
   const handleEdit = () => router.push(`/editar-funcionario?cpf=${funcionario.cpf}`);
 

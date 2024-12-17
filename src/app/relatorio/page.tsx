@@ -7,7 +7,7 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import styles from "../page.module.css";
 
-export interface IUser {
+interface IUser {
   id: string;
   nome: string;
   email: string;
