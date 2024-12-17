@@ -185,7 +185,7 @@ export default function Relatorio() {
         yOffset + 14
       );
   
-      const tableData = user.Horas.sort((a,b) => new Date(a.data) - new Date(b.data)).map((hora) => [
+      const tableData = user.Horas.sort((a,b) => new Date(a.data).getTime() - new Date(b.data).getTime()).map((hora) => [
         formatDateToDDMMYYYY(new Date(hora.data)) || "FALTA",
         formatHour(hora.checkIn),
         formatHour(hora.checkOut),
@@ -271,7 +271,7 @@ export default function Relatorio() {
     }
   
     // Gera a tabela para cada funcionário
-    filteredFuncionarios.sort((a, b) => a.id - b.id).forEach((user, index) => {
+    filteredFuncionarios.sort((a, b) => Number(a.id) - Number(b.id)).forEach((user, index) => {
       if (index !== 0) yOffset += 10; // Espaço entre as seções
   
       doc.setFontSize(12);
@@ -287,7 +287,7 @@ export default function Relatorio() {
         yOffset + 14
       );
   
-      const tableData = user.Horas.sort((a,b) => new Date(a.data) - new Date(b.data)).map((hora) => [
+      const tableData = user.Horas.sort((a,b) => new Date(a.data).getTime() - new Date(b.data).getTime()).map((hora) => [
         formatDateToDDMMYYYY(new Date(hora.data)) || "FALTA",
         formatHour(hora.checkIn),
         formatHour(hora.checkOut),
@@ -346,7 +346,7 @@ export default function Relatorio() {
           />
           <div className={styles.containerScroll}>
             <div className={styles.scrollbarBox}>
-              {filteredFuncionarios.sort((a, b) => a.id - b.id).map((func) => (
+              {filteredFuncionarios.sort((a, b) => Number(a.id) - Number(b.id)).map((func) => (
                 <button
                   key={func.cpf}
                   className={styles.ClickableElementList}
