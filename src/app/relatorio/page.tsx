@@ -91,7 +91,7 @@ export default function Relatorio() {
     .filter((hora) => {
       const horaData = new Date(hora.data);
       return horaData >= OneMonthBack && horaData <= ActualDate;
-    }).sort((a,b) => new Date(a.data) - new Date(b.data))
+    }).sort((a,b) => new Date(a.data).getTime() - new Date(b.data).getTime())
     .map((hora) => [
       formatDateToDDMMYYYY(new Date(hora.data)) || "FALTA",
       formatHour(hora.checkIn),
