@@ -103,7 +103,7 @@ export default function Editar() {
     }
   };
 
-  const handleBack = () => router.push("/controle"); // Redireciona para a página de Controle
+  const handleBack = () => history.back(); // Redireciona para a página de Controle
 
   return (
     <div className={styles.page}>

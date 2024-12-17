@@ -384,7 +384,7 @@ export default function Relatorio() {
               Gerar Relatório Filtrado
             </button>
         </div>
-        <button className={styles.ExitButton} onClick={() => router.push("/rh")}>
+        <button className={styles.ExitButton} onClick={() => history.back()}>
           Voltar
         </button>
       </main>

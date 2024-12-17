@@ -7,7 +7,12 @@ import styles from "../page.module.css";
 
 export default function Previsao() {
   const router = useRouter();
-  const handleExit = () => router.push("/login");
+  async function handleExit() {
+    const res = await fetch('/api/login', { method: 'DELETE' })
+    if (res.ok){
+      router.push("/login"); // Redireciona para a página de login 
+    }
+  }
 
   // Estados para armazenar o horário do Check-in e a etapa do expediente
   const [currentStage, setCurrentStage] = useState("checkin");

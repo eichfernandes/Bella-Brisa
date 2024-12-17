@@ -8,7 +8,7 @@ import MaskedInput, { cpfMask, idMask } from '../Mask';
 
 export default function EsqueciMinhaSenha() {
   const router = useRouter();
-  const handleBack = () => router.push("/login"); // Redireciona para a página de Controle
+  const handleBack = () => history.back(); // Redireciona para a página de Controle
 
   return (
     <div className={styles.page}>
