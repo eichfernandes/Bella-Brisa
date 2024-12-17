@@ -80,9 +80,9 @@ export default function Relatorio() {
       "Data",
       "Entrada",
       "Saída",
-      "Horas Trabalhadas",
       "Entrada Almoço",
       "Saída Almoço",
+      "Horas Trabalhadas",
       "Duração Almoço",
       "Inconsistência",
     ];
@@ -91,16 +91,16 @@ export default function Relatorio() {
     .filter((hora) => {
       const horaData = new Date(hora.data);
       return horaData >= OneMonthBack && horaData <= ActualDate;
-    })
+    }).sort((a,b) => new Date(a.data) - new Date(b.data))
     .map((hora) => [
       formatDateToDDMMYYYY(new Date(hora.data)) || "FALTA",
       formatHour(hora.checkIn),
       formatHour(hora.checkOut),
-      formatDecimalToHours(calculateHoursWorked(hora.checkIn, hora.checkOut)),
       formatHour(hora.almocoIn),
       formatHour(hora.almocoOut),
+      formatDecimalToHours(calculateHoursWorked(hora.checkIn, hora.checkOut, hora.almocoIn, hora.almocoOut)),
       formatDecimalToHours(calculateLunchDuration(hora.almocoIn, hora.almocoOut)),
-      formatDecimalToHours(calculateInconsistency(hora.checkIn, hora.checkOut)),
+      formatDecimalToHours(calculateInconsistency(hora.checkIn, hora.checkOut, hora.almocoIn, hora.almocoOut)),
     ]);
 
     (doc as any).autoTable({
@@ -143,9 +143,9 @@ export default function Relatorio() {
       "Data",
       "Entrada",
       "Saída",
-      "Horas Trabalhadas",
       "Entrada Almoço",
       "Saída Almoço",
+      "Horas Trabalhadas",
       "Duração Almoço",
       "Inconsistência",
     ];
@@ -169,7 +169,7 @@ export default function Relatorio() {
     }
   
     // Gera a tabela para cada funcionário
-    filteredFuncionarios.forEach((user, index) => {
+    filteredFuncionarios.sort((a, b) => a.id - b.id).forEach((user, index) => {
       if (index !== 0) yOffset += 10; // Espaço entre as seções
   
       doc.setFontSize(12);
@@ -185,16 +185,15 @@ export default function Relatorio() {
         yOffset + 14
       );
   
-      const tableData = user.Horas.map((hora) => [
+      const tableData = user.Horas.sort((a,b) => new Date(a.data) - new Date(b.data)).map((hora) => [
         formatDateToDDMMYYYY(new Date(hora.data)) || "FALTA",
         formatHour(hora.checkIn),
         formatHour(hora.checkOut),
-        formatDecimalToHours(calculateHoursWorked(hora.checkIn, hora.checkOut)),
         formatHour(hora.almocoIn),
         formatHour(hora.almocoOut),
-        //formatDecimalToHours(calculateLunchDuration(hora.almocoIn, hora.almocoOut)),
-        calculateInconsistency(hora.checkIn, hora.checkOut),
-        formatDecimalToHours(calculateInconsistency(hora.checkIn, hora.checkOut)),
+        formatDecimalToHours(calculateHoursWorked(hora.checkIn, hora.checkOut, hora.almocoIn, hora.almocoOut)),
+        formatDecimalToHours(calculateLunchDuration(hora.almocoIn, hora.almocoOut)),
+        formatDecimalToHours(calculateInconsistency(hora.checkIn, hora.checkOut, hora.almocoIn, hora.almocoOut)),
       ]);
   
       (doc as any).autoTable({
@@ -246,9 +245,9 @@ export default function Relatorio() {
       "Data",
       "Entrada",
       "Saída",
-      "Horas Trabalhadas",
       "Entrada Almoço",
       "Saída Almoço",
+      "Horas Trabalhadas",
       "Duração Almoço",
       "Inconsistência",
     ];
@@ -272,7 +271,7 @@ export default function Relatorio() {
     }
   
     // Gera a tabela para cada funcionário
-    filteredFuncionarios.forEach((user, index) => {
+    filteredFuncionarios.sort((a, b) => a.id - b.id).forEach((user, index) => {
       if (index !== 0) yOffset += 10; // Espaço entre as seções
   
       doc.setFontSize(12);
@@ -288,15 +287,15 @@ export default function Relatorio() {
         yOffset + 14
       );
   
-      const tableData = user.Horas.map((hora) => [
+      const tableData = user.Horas.sort((a,b) => new Date(a.data) - new Date(b.data)).map((hora) => [
         formatDateToDDMMYYYY(new Date(hora.data)) || "FALTA",
         formatHour(hora.checkIn),
         formatHour(hora.checkOut),
-        formatDecimalToHours(calculateHoursWorked(hora.checkIn, hora.checkOut)),
         formatHour(hora.almocoIn),
         formatHour(hora.almocoOut),
+        formatDecimalToHours(calculateHoursWorked(hora.checkIn, hora.checkOut, hora.almocoIn, hora.almocoOut)),
         formatDecimalToHours(calculateLunchDuration(hora.almocoIn, hora.almocoOut)),
-        formatDecimalToHours(calculateInconsistency(hora.checkIn, hora.checkOut)),
+        formatDecimalToHours(calculateInconsistency(hora.checkIn, hora.checkOut, hora.almocoIn, hora.almocoOut)),
       ]);
   
       (doc as any).autoTable({
@@ -347,7 +346,7 @@ export default function Relatorio() {
           />
           <div className={styles.containerScroll}>
             <div className={styles.scrollbarBox}>
-              {filteredFuncionarios.map((func) => (
+              {filteredFuncionarios.sort((a, b) => a.id - b.id).map((func) => (
                 <button
                   key={func.cpf}
                   className={styles.ClickableElementList}
@@ -407,9 +406,9 @@ const formatDateToDDMMYYYY = (date: Date): string => {
   return `${day}/${month}/${year}`;
 };
 
-const calculateHoursWorked = (checkIn: string | null, checkOut: string | null) => {
+const calculateHoursWorked = (checkIn: string | null, checkOut: string | null, almocoIn: string | null, almocoOut: string | null) => {
   if (!checkIn || !checkOut) return 0;
-  return (new Date(checkOut).getTime() - new Date(checkIn).getTime()) / 3600000;
+  return (new Date(checkOut).getTime() - new Date(checkIn).getTime()) / 3600000 - calculateLunchDuration(almocoIn, almocoOut);
 };
 
 const calculateLunchDuration = (almocoIn: string | null, almocoOut: string | null) => {
@@ -417,8 +416,8 @@ const calculateLunchDuration = (almocoIn: string | null, almocoOut: string | nul
   return (new Date(almocoOut).getTime() - new Date(almocoIn).getTime()) / 3600000;
 };
 
-const calculateInconsistency = (checkIn: string | null, checkOut: string | null) => {
-  const worked = calculateHoursWorked(checkIn, checkOut);
+const calculateInconsistency = (checkIn: string | null, checkOut: string | null, almocoIn: string | null, almocoOut: string | null) => {
+  const worked = calculateHoursWorked(checkIn, checkOut, almocoIn, almocoOut);
   const expected = -8;
   const inconsistency = expected + worked;
   return inconsistency;
@@ -443,10 +442,10 @@ const formatDecimalToHours = (decimalHours: number): string => {
 
 const calculateTotalHours = (horas: any[]) =>
   formatDecimalToHours(
-    horas.reduce((sum, h) => sum + calculateHoursWorked(h.checkIn, h.checkOut), 0)
+    horas.reduce((sum, h) => sum + calculateHoursWorked(h.checkIn, h.checkOut, h.almocoIn, h.almocoOut), 0)
   );
 
 const calculateTotalInconsistency = (horas: any[]) =>
   formatDecimalToHours(
-    horas.reduce((sum, h) => sum + calculateInconsistency(h.checkIn, h.checkOut), 0)
+    horas.reduce((sum, h) => sum + calculateInconsistency(h.checkIn, h.checkOut, h.almocoIn, h.almocoOut), 0)
   );
