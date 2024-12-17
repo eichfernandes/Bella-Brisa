@@ -1,0 +1,17 @@
+name: Send Monthly Report
+
+on:
+  schedule:
+    - cron: "0 0 1 * *" # Executa todo dia 1 do mês às 00:00 UTC
+
+  workflow_dispatch: # Permite disparar manualmente também
+
+jobs:
+  send-report:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger Monthly Report API
+        run: |
+          curl -X GET "https://bella-brisa.vercel.app/api/relatorio" \
+          --fail
