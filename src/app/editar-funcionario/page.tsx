@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useSearchParams, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import styles from "../page.module.css";
 import MaskedInput, { cpfMask } from "../Mask";
 
@@ -16,17 +16,39 @@ export default function Editar() {
   const [successMessage, setSuccessMessage] = useState(""); // Mensagem de sucesso
   const [cpf, setCpf] = useState<string | null>(null); // CPF do funcionário vindo da URL
   const router = useRouter();
-  const searchParams = useSearchParams(); // Para capturar os parâmetros da URL
 
-  // Buscando o CPF apenas quando o componente é montado no cliente
+  // SuspenseBoundary para garantir que useSearchParams só execute no cliente
+  return (
+    <Suspense fallback={<div>Carregando...</div>}>
+      <EditarPage cpf={cpf} setCpf={setCpf} />
+    </Suspense>
+  );
+}
+
+function EditarPage({ cpf, setCpf }: { cpf: string | null, setCpf: React.Dispatch<React.SetStateAction<string | null>> }) {
+  const searchParams = useSearchParams();
+  
+  // Garantir que o cpf seja atualizado apenas no lado do cliente
   useEffect(() => {
-    const cpfParam = searchParams.get("cpf");
-    if (cpfParam) {
-      setCpf(cpfParam); // Atualiza o estado com o CPF
+    if (!cpf) {
+      const cpfParam = searchParams.get("cpf");
+      if (cpfParam) {
+        setCpf(cpfParam);
+      }
     }
-  }, [searchParams]); // Reexecuta quando os parâmetros mudam
+  }, [cpf, searchParams, setCpf]);
 
-  // Busca os dados do funcionário apenas se o CPF estiver disponível
+  const [funcName, setFuncName] = useState(""); 
+  const [funcCPF, setFuncCPF] = useState(""); 
+  const [funcID, setFuncID] = useState(""); 
+  const [funcEmail, setFuncEmail] = useState(""); 
+  const [password, setPassword] = useState(""); 
+  const [errorMessage, setErrorMessage] = useState(""); 
+  const [successMessage, setSuccessMessage] = useState(""); 
+  
+  const router = useRouter();
+
+  // Busca os dados do funcionário
   useEffect(() => {
     if (cpf) {
       async function fetchFuncionario() {
@@ -35,7 +57,6 @@ export default function Editar() {
           if (response.ok) {
             const data = await response.json();
             const user = data.user;
-
             if (user) {
               setFuncName(user.nome || "");
               setFuncCPF(user.cpf || "");
@@ -54,9 +75,8 @@ export default function Editar() {
 
       fetchFuncionario();
     }
-  }, [cpf]); // Refaz a busca quando o CPF mudar
+  }, [cpf]);
 
-  // Função para editar os dados do funcionário
   const handleEdit = async () => {
     try {
       const updatedData = {
@@ -87,7 +107,6 @@ export default function Editar() {
     }
   };
 
-  // Função para excluir o funcionário
   const handleDelete = async () => {
     const confirmDelete = confirm("Você tem certeza que deseja excluir este funcionário?");
     if (!confirmDelete) return;
@@ -110,7 +129,7 @@ export default function Editar() {
     }
   };
 
-  const handleBack = () => history.back(); // Redireciona para a página de Controle
+  const handleBack = () => history.back();
 
   return (
     <div className={styles.page}>
