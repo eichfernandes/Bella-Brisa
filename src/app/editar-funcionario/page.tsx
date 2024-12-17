@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useSearchParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import styles from "../page.module.css";
+import MaskedInput, { cpfMask } from "../Mask";
 
 export default function Editar() {
   const [funcName, setFuncName] = useState(""); // Nome do funcionário
@@ -15,9 +16,10 @@ export default function Editar() {
   const [successMessage, setSuccessMessage] = useState(""); // Mensagem de sucesso
   const router = useRouter();
   const searchParams = useSearchParams();
-
-  const [cpf, setCpf] = useState<string | null>(null);
-
+  
+  const [cpf, setCpf] = useState<string | null>(null); // Armazena o CPF dos parâmetros da URL
+  
+  // A lógica para pegar o cpf deve ser feita dentro de um useEffect para evitar problemas com SSR
   useEffect(() => {
     const cpfParam = searchParams.get("cpf");
     if (cpfParam) {
@@ -34,7 +36,7 @@ export default function Editar() {
           if (response.ok) {
             const data = await response.json();
             const user = data.user;
-  
+
             if (user) {
               setFuncName(user.nome || "");
               setFuncCPF(user.cpf || "");
@@ -50,11 +52,10 @@ export default function Editar() {
           setErrorMessage("Erro ao conectar com a API.");
         }
       }
-  
+
       fetchFuncionario();
     }
   }, [cpf]);
-  
 
   // Função para editar os dados do funcionário
   const handleEdit = async () => {
