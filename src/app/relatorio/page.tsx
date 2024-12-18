@@ -100,7 +100,7 @@ export default function Relatorio() {
       `${formatHour(hora.almocoOut)}${hora.almocoOut ? "\n" + formatDateToDDMMYYYY(new Date(hora.almocoOut)) : "" }`,
       formatDecimalToHours(calculateHoursWorked(hora.checkIn, hora.checkOut, hora.almocoIn, hora.almocoOut)),
       formatDecimalToHours(calculateLunchDuration(hora.almocoIn, hora.almocoOut)),
-      formatDecimalToHours(calculateInconsistency(hora.checkIn, hora.checkOut, hora.almocoIn, hora.almocoOut)),
+      `${formatDecimalToHours(calculateInconsistency(hora.checkIn, hora.checkOut, hora.almocoIn, hora.almocoOut))}${formatDecimalToHours(calculateInconsistency(hora.checkIn, hora.checkOut, hora.almocoIn, hora.almocoOut))[0] === '-' ? "\n(Dívida)" : ""}`,
     ]);
 
     (doc as any).autoTable({
@@ -193,7 +193,7 @@ export default function Relatorio() {
         `${formatHour(hora.almocoOut)}${hora.almocoOut ? "\n" + formatDateToDDMMYYYY(new Date(hora.almocoOut)) : "" }`,
         formatDecimalToHours(calculateHoursWorked(hora.checkIn, hora.checkOut, hora.almocoIn, hora.almocoOut)),
         formatDecimalToHours(calculateLunchDuration(hora.almocoIn, hora.almocoOut)),
-        formatDecimalToHours(calculateInconsistency(hora.checkIn, hora.checkOut, hora.almocoIn, hora.almocoOut)),
+        `${formatDecimalToHours(calculateInconsistency(hora.checkIn, hora.checkOut, hora.almocoIn, hora.almocoOut))}${formatDecimalToHours(calculateInconsistency(hora.checkIn, hora.checkOut, hora.almocoIn, hora.almocoOut))[0] === '-' ? "\n(Dívida)" : ""}`,
       ]);
   
       (doc as any).autoTable({
@@ -295,7 +295,7 @@ export default function Relatorio() {
         `${formatHour(hora.almocoOut)}${hora.almocoOut ? "\n" + formatDateToDDMMYYYY(new Date(hora.almocoOut)) : "" }`,
         formatDecimalToHours(calculateHoursWorked(hora.checkIn, hora.checkOut, hora.almocoIn, hora.almocoOut)),
         formatDecimalToHours(calculateLunchDuration(hora.almocoIn, hora.almocoOut)),
-        formatDecimalToHours(calculateInconsistency(hora.checkIn, hora.checkOut, hora.almocoIn, hora.almocoOut)),
+        `${formatDecimalToHours(calculateInconsistency(hora.checkIn, hora.checkOut, hora.almocoIn, hora.almocoOut))}${formatDecimalToHours(calculateInconsistency(hora.checkIn, hora.checkOut, hora.almocoIn, hora.almocoOut))[0] === '-' ? "\n(Dívida)" : ""}`,
       ]);
   
       (doc as any).autoTable({
