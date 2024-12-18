@@ -129,7 +129,7 @@ function EditarPage({ cpf, setCpf }: { cpf: string | null, setCpf: React.Dispatc
     }
   };
 
-  const handleBack = () => history.back();
+  const handleBack = () => router.push("/controle");
 
   return (
     <div className={styles.page}>

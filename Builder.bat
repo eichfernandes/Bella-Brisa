@@ -2,14 +2,10 @@
 REM Mudar para o diretório do script
 cd /d "%~dp0"
 
-call NPMInstall.bat
-call Builder.bat
-
 echo ============================
-echo Iniciando Sistema Web...
+echo Fazendo Build do Sistema...
 echo ============================
-start "" http://localhost:3000
-npm run start
+npm run build
 IF %ERRORLEVEL% NEQ 0 (
     echo Erro ao iniciar a aplicação. Encerrando.
     pause

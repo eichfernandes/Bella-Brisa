@@ -79,9 +79,9 @@ export default function Relatorio() {
     const tableHeaders = [
       "Data",
       "Entrada",
+      "Intervalo",
+      "Retorno",
       "Saída",
-      "Entrada Almoço",
-      "Saída Almoço",
       "Horas Trabalhadas",
       "Duração Almoço",
       "Inconsistência",
@@ -95,9 +95,9 @@ export default function Relatorio() {
     .map((hora) => [
       formatDateToDDMMYYYY(new Date(hora.data)) || "FALTA",
       formatHour(hora.checkIn),
-      `${formatHour(hora.checkOut)}${hora.checkOut ? "\n" + formatDateToDDMMYYYY(new Date(hora.checkOut)) : "" }`,
       `${formatHour(hora.almocoIn)}${hora.almocoIn ? "\n" + formatDateToDDMMYYYY(new Date(hora.almocoIn)) : "" }`,
       `${formatHour(hora.almocoOut)}${hora.almocoOut ? "\n" + formatDateToDDMMYYYY(new Date(hora.almocoOut)) : "" }`,
+      `${formatHour(hora.checkOut)}${hora.checkOut ? "\n" + formatDateToDDMMYYYY(new Date(hora.checkOut)) : "" }`,
       formatDecimalToHours(calculateHoursWorked(hora.checkIn, hora.checkOut, hora.almocoIn, hora.almocoOut)),
       formatDecimalToHours(calculateLunchDuration(hora.almocoIn, hora.almocoOut)),
       `${formatDecimalToHours(calculateInconsistency(hora.checkIn, hora.checkOut, hora.almocoIn, hora.almocoOut))}${formatDecimalToHours(calculateInconsistency(hora.checkIn, hora.checkOut, hora.almocoIn, hora.almocoOut))[0] === '-' ? "\n(Dívida)" : ""}`,
@@ -142,9 +142,9 @@ export default function Relatorio() {
     const tableHeaders = [
       "Data",
       "Entrada",
+      "Intervalo",
+      "Retorno",
       "Saída",
-      "Entrada Almoço",
-      "Saída Almoço",
       "Horas Trabalhadas",
       "Duração Almoço",
       "Inconsistência",
@@ -188,9 +188,9 @@ export default function Relatorio() {
       const tableData = user.Horas.sort((a,b) => new Date(a.data).getTime() - new Date(b.data).getTime()).map((hora) => [
         formatDateToDDMMYYYY(new Date(hora.data)) || "FALTA",
         formatHour(hora.checkIn),
-        `${formatHour(hora.checkOut)}${hora.checkOut ? "\n" + formatDateToDDMMYYYY(new Date(hora.checkOut)) : "" }`,
         `${formatHour(hora.almocoIn)}${hora.almocoIn ? "\n" + formatDateToDDMMYYYY(new Date(hora.almocoIn)) : "" }`,
         `${formatHour(hora.almocoOut)}${hora.almocoOut ? "\n" + formatDateToDDMMYYYY(new Date(hora.almocoOut)) : "" }`,
+        `${formatHour(hora.checkOut)}${hora.checkOut ? "\n" + formatDateToDDMMYYYY(new Date(hora.checkOut)) : "" }`,
         formatDecimalToHours(calculateHoursWorked(hora.checkIn, hora.checkOut, hora.almocoIn, hora.almocoOut)),
         formatDecimalToHours(calculateLunchDuration(hora.almocoIn, hora.almocoOut)),
         `${formatDecimalToHours(calculateInconsistency(hora.checkIn, hora.checkOut, hora.almocoIn, hora.almocoOut))}${formatDecimalToHours(calculateInconsistency(hora.checkIn, hora.checkOut, hora.almocoIn, hora.almocoOut))[0] === '-' ? "\n(Dívida)" : ""}`,
@@ -222,10 +222,10 @@ export default function Relatorio() {
   // Gerar relatório filtrado por data
   const generateFilteredPDF = () => {
     const newStartDate = new Date(startDate);
-    newStartDate.setDate(newStartDate.getDate() + 1);
+    newStartDate.setDate(newStartDate.getDate());
 
     const newEndDate = new Date(endDate);
-    newEndDate.setDate(newEndDate.getDate() + 1);
+    newEndDate.setDate(newEndDate.getDate());
 
     if (!startDate || !endDate) {
       alert("Por favor, selecione as datas de início e fim.");
@@ -244,9 +244,9 @@ export default function Relatorio() {
     const tableHeaders = [
       "Data",
       "Entrada",
+      "Intervalo",
+      "Retorno",
       "Saída",
-      "Entrada Almoço",
-      "Saída Almoço",
       "Horas Trabalhadas",
       "Duração Almoço",
       "Inconsistência",
@@ -290,9 +290,9 @@ export default function Relatorio() {
       const tableData = user.Horas.sort((a,b) => new Date(a.data).getTime() - new Date(b.data).getTime()).map((hora) => [
         formatDateToDDMMYYYY(new Date(hora.data)) || "FALTA",
         formatHour(hora.checkIn),
-        `${formatHour(hora.checkOut)}${hora.checkOut ? "\n" + formatDateToDDMMYYYY(new Date(hora.checkOut)) : "" }`,
         `${formatHour(hora.almocoIn)}${hora.almocoIn ? "\n" + formatDateToDDMMYYYY(new Date(hora.almocoIn)) : "" }`,
         `${formatHour(hora.almocoOut)}${hora.almocoOut ? "\n" + formatDateToDDMMYYYY(new Date(hora.almocoOut)) : "" }`,
+        `${formatHour(hora.checkOut)}${hora.checkOut ? "\n" + formatDateToDDMMYYYY(new Date(hora.checkOut)) : "" }`,
         formatDecimalToHours(calculateHoursWorked(hora.checkIn, hora.checkOut, hora.almocoIn, hora.almocoOut)),
         formatDecimalToHours(calculateLunchDuration(hora.almocoIn, hora.almocoOut)),
         `${formatDecimalToHours(calculateInconsistency(hora.checkIn, hora.checkOut, hora.almocoIn, hora.almocoOut))}${formatDecimalToHours(calculateInconsistency(hora.checkIn, hora.checkOut, hora.almocoIn, hora.almocoOut))[0] === '-' ? "\n(Dívida)" : ""}`,
@@ -384,7 +384,7 @@ export default function Relatorio() {
               Gerar Relatório Filtrado
             </button>
         </div>
-        <button className={styles.ExitButton} onClick={() => history.back()}>
+        <button className={styles.ExitButton} onClick={() => router.push("/rh")}>
           Voltar
         </button>
       </main>

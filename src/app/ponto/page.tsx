@@ -31,17 +31,23 @@ export default function Ponto() {
             nome: data.user?.nome || "Nome não encontrado", // Ajuste conforme o formato da resposta
           });
           console.log(data);
-          const ultimoRegistro = data.user.Horas[data.user.Horas.length - 1];
-          console.log("ultimo registro: " + ultimoRegistro.data)
+          console.log("Acessando Registro...");
+          try{
+            const ultimoRegistro = data.user.Horas[data.user.Horas.length - 1];
+            console.log("ultimo registro: " + ultimoRegistro.data)
 
-          if (ultimoRegistro) {
-            if (ultimoRegistro.checkOut) setStage("start");
-            else if (ultimoRegistro.almocoOut) setStage("afterLunch");
-            else if (ultimoRegistro.almocoIn) setStage("duringLunch");
-            else if (ultimoRegistro.checkIn) setStage("beforeLunch");
-            else setStage("start");
-          } else {
+            if (ultimoRegistro) {
+              if (ultimoRegistro.checkOut) setStage("start");
+              else if (ultimoRegistro.almocoOut) setStage("afterLunch");
+              else if (ultimoRegistro.almocoIn) setStage("duringLunch");
+              else if (ultimoRegistro.checkIn) setStage("beforeLunch");
+              else setStage("start");
+            } else {
+              setStage("start");
+            }
+          }catch{
             setStage("start");
+            console.log("Não há último registro.")
           }
         } else {
           setErrorMessage("Erro ao carregar estado do expediente.");
@@ -184,11 +190,6 @@ export default function Ponto() {
                 value="Check-Out"
                 onClick={handleCheckOut}
               />
-            </div>
-          )}
-          {stage === "end" && (
-            <div className={styles.TextBox}>
-              <p>Expediente encerrado. Tenha um bom dia!</p>
             </div>
           )}
         </div>

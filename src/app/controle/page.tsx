@@ -12,7 +12,7 @@ export default function Gerenciamento() {
   const [searchTerm, setSearchTerm] = useState(""); // Estado para a barra de pesquisa
 
   const handleBack = () => router.push("/rh");
-  const handleCadastro = () => history.back();
+  const handleCadastro = () => router.push("/cadastro-funcionario");
 
   // Buscar os dados dos funcionários da API
   useEffect(() => {

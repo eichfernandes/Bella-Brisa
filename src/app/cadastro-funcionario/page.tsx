@@ -16,7 +16,7 @@ export default function Cadastro() {
   const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
 
-  const handleBack = () => history.back();
+  const handleBack = () => router.push("/controle");
 
   // Validação do CPF
   const isValidCPF = (cpf: string) => /^[0-9]{11}$/.test(cpf.replace(/\D/g, ""));
