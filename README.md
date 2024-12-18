@@ -120,10 +120,18 @@ Gerenciamento de carga horária dos funcionários do hotel Bella Brisa.
 
 ### RH/Admin
 
-1. **Baixar Relatórios:**
+1. **Baixar Relatórios de Funcionário:**
+   - Acesse "Gerar Relatórios".
+   - Clique no funcionário escolhido.
+
+   **Baixar Relatórios Gerais:**
+   - Acesse "Gerar Relatórios".
+   - Clique em "Gerar Relatório Geral".
+
+   **Baixar Relatórios:**
    - Acesse "Gerar Relatórios".
    - Insira datas ou deixe em branco para relatório do último mês.
-   - Clique em "Baixar".
+   - Clique em "Gerar Relatório Filtrado".
 
 2. **Gerenciar Funcionários:**
    - Acesse "Controle de Funcionários".
