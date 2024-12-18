@@ -11,6 +11,8 @@ export default function Ponto() {
   const router = useRouter();
   const cpf = "12345678900"; // This should come from authentication or user session
 
+  const [userData, setUserData] = useState<{ id: string; nome: string } | null>(null); // Para escrever ID e Nome do funcionário na tela
+
   // Busca o estado atual do expediente no banco de dados ao carregar a página
   useEffect(() => {
     async function fetchStage() {
@@ -20,6 +22,10 @@ export default function Ponto() {
         });
         if (response.ok) {
           const data = await response.json();
+          setUserData({
+            id: data.user?.id || "ID não encontrado",  // Ajuste conforme o formato da resposta
+            nome: data.user?.nome || "Nome não encontrado", // Ajuste conforme o formato da resposta
+          });
           console.log(data)
           const today = new Date().toISOString().split("T")[0]; // Pega apenas a data (YYYY-MM-DD)
           const todayRecord = data.user?.Horas?.find(
@@ -95,6 +101,17 @@ export default function Ponto() {
     }
   }
 
+  const [currentDateTime, setCurrentDateTime] = useState<string>("");
+
+  useEffect(() => {
+    const today = new Date();
+    const dateString = today.toLocaleDateString("pt-BR"); // Data no formato DD/MM/AAAA
+    const timeString = today.toLocaleTimeString("pt-BR"); // Hora no formato HH:MM:SS
+    setCurrentDateTime(`${dateString} ${timeString}`);
+  
+    // Sua lógica para buscar o estado do expediente...
+  }, []);
+
   return (
     <div className={styles.page}>
       <header className={styles.header}>
@@ -111,7 +128,8 @@ export default function Ponto() {
       <main className={styles.main}>
         <div className={styles.container}>
           <h1>REGISTRO DE PONTO</h1>
-          <h2>ID: #### - Nome Completo</h2>
+          <h2>ID: {userData?.id + " - " + userData?.nome || 'Carregando...'}</h2>
+          <h3>({currentDateTime})</h3>
           {errorMessage && <p className={styles.errorText}>{errorMessage}</p>}
           {stage === "loading" && (
             <div className={styles.TextBox}>
