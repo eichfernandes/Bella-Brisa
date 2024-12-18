@@ -83,15 +83,6 @@ export default function LoginPage() {
           </form>
         </div>
       </main>
-      <footer className={styles.footer}>
-        <button
-          type="button"
-          className={styles.footerButton}
-          onClick={() => router.push("/esqueci-minha-senha")}
-        >
-          Esqueci Minha Senha
-        </button>
-      </footer>
     </div>
   );
 }

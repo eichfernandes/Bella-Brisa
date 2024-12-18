@@ -15,7 +15,7 @@ export async function middleware(req: NextRequest) {
   try {
     const token = req.cookies.get('token')?.value as string;
     const { cpf } = (await jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET))).payload as {cpf: string};
-    if (cpf === process.env.CNPJ_CLIENTE) return NextResponse.next();
+    if (cpf === process.env.CNPJ_CLIENTE || cpf === process.env.CPF_CLIENTE) return NextResponse.next();
     
     console.log(isPaginaFuncionario(paginasFuncionario));
     if (isPaginaFuncionario(paginasFuncionario)) return NextResponse.next();
