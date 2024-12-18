@@ -2,29 +2,29 @@
 
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useState, Suspense } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "../page.module.css";
 
 export default function Previsao() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  
-  const [currentStage, setCurrentStage] = useState<string | null>(null);
+
+  // Estado para armazenar o valor do estágio
+  const [currentStage, setCurrentStage] = useState("checkin");
 
   useEffect(() => {
-    // Acessa searchParams apenas no cliente
-    const stage = searchParams.get("stage") || "checkin";
-    setCurrentStage(stage);
+    if (typeof window !== 'undefined') {
+      // Certifique-se de que está no cliente antes de acessar searchParams
+      setCurrentStage(searchParams.get("stage") || "checkin");
+    }
   }, [searchParams]);
 
   async function handleExit() {
     const res = await fetch('/api/login', { method: 'DELETE' });
     if (res.ok) {
-      router.push("/login"); // Redireciona para a página de login 
+      router.push("/login"); // Redireciona para a página de login
     }
   }
-
-  if (currentStage === null) return null; // Evita renderização até definir o estado
 
   return (
     <div className={styles.page}>
@@ -41,9 +41,7 @@ export default function Previsao() {
       <main className={styles.main}>
         <div className={styles.container}>
           <h1>PREVISÃO DE HORÁRIOS</h1>
-          <Suspense fallback={<div>Carregando...</div>}>
-            <Horas currentStage={currentStage} />
-          </Suspense>
+          <Horas currentStage={currentStage} />
         </div>
         <button className={styles.ExitButton} onClick={handleExit}>
           Sair
