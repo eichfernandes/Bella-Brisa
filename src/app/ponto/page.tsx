@@ -31,17 +31,14 @@ export default function Ponto() {
             nome: data.user?.nome || "Nome não encontrado", // Ajuste conforme o formato da resposta
           });
           console.log(data);
-          const today = formatUTCtoBrasilia(new Date()).toISOString().split("T")[0]; // Pega apenas a data (YYYY-MM-DD)
-          console.log(today);
-          const todayRecord = data.user?.Horas?.find(
-            (record: { data: string }) => record.data === today
-          );
+          const ultimoRegistro = data.user.Horas[data.user.Horas.length - 1];
+          console.log("ultimo registro: " + ultimoRegistro.data)
 
-          if (todayRecord) {
-            if (todayRecord.checkOut) setStage("end");
-            else if (todayRecord.almocoOut) setStage("afterLunch");
-            else if (todayRecord.almocoIn) setStage("duringLunch");
-            else if (todayRecord.checkIn) setStage("beforeLunch");
+          if (ultimoRegistro) {
+            if (ultimoRegistro.checkOut) setStage("start");
+            else if (ultimoRegistro.almocoOut) setStage("afterLunch");
+            else if (ultimoRegistro.almocoIn) setStage("duringLunch");
+            else if (ultimoRegistro.checkIn) setStage("beforeLunch");
             else setStage("start");
           } else {
             setStage("start");

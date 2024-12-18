@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
             );
         }
     
-        // Find the user by CPF
+        // Encontra usuario pelo CPF
         console.log(cpf);
         const user = await findByCPF(cpf);
         if (!user) {
@@ -33,48 +33,54 @@ export async function POST(req: NextRequest) {
             );
         }
     
-        // Find or create today's registro
-        const hoje = formatUTCtoBrasilia(new Date()).toISOString().split("T")[0]; // Get YYYY-MM-DD format
-        let hojeRegistro = user.Horas.find(
-            (registro: { data: string }) => registro.data === hoje
-        );
-    
-        if (!hojeRegistro) {
-            hojeRegistro = {
-            data: hoje,
+        // Pega o ultimo registro ou cria um se necessário
+        const ultimoRegistro = user.Horas[user.Horas.length - 1]; // Last registro
+
+        // Define a função que cria um novo registro
+        const criarNovoRegistro = () => ({
+            data: formatUTCtoBrasilia(new Date()).toISOString().split("T")[0],
             checkIn: null,
             checkOut: null,
             almocoIn: null,
             almocoOut: null,
-            };
-            user.Horas.push(hojeRegistro);
-        }
-    
-        // Update the appropriate time field
-        const tiposValidos = ["checkIn", "checkOut", "almocoIn", "almocoOut"];
-        if (!tiposValidos.includes(tipo)) {
-            return NextResponse.json(
-            { error: "Tipo inválido. Deve ser: checkIn, checkOut, almocoIn, almocoOut" },
-            { status: 500 }
-            );
-        }
-    
-        hojeRegistro[tipo] = formatUTCtoBrasilia(new Date());
-    
-        // Update the user in the database
-        await updateByCPF(cpf, { Horas: user.Horas });
-    
-        return NextResponse.json({
-            message: "Horas registradas"
         });
-        } catch (error: any) {
-        console.error(error);
-        return NextResponse.json(
-            { error: "Erro inesperado" },
-            { status: 500 }
-        );
-    }
-}
+
+        // Verifica se é necessário criar um novo registro
+        let registroAtual;
+        if (!ultimoRegistro || ultimoRegistro.checkOut) {
+            // Criar um novo registro se o último tem checkOut ou não existe
+            registroAtual = criarNovoRegistro();
+            user.Horas.push(registroAtual);
+        } else {
+            // Usar o último registro se ele não possui checkOut
+            registroAtual = ultimoRegistro;
+        }
+    
+         // Atualiza o campo apropriado no registro
+         const tiposValidos = ["checkIn", "checkOut", "almocoIn", "almocoOut"];
+         if (!tiposValidos.includes(tipo)) {
+             return NextResponse.json(
+                 { error: "Tipo inválido. Deve ser: checkIn, checkOut, almocoIn, almocoOut" },
+                 { status: 500 }
+             );
+         }
+ 
+         registroAtual[tipo] = formatUTCtoBrasilia(new Date());
+ 
+         // Atualiza o usuário no banco de dados
+         await updateByCPF(cpf, { Horas: user.Horas });
+ 
+         return NextResponse.json({
+             message: "Horas registradas",
+         });
+     } catch (error: any) {
+         console.error(error);
+         return NextResponse.json(
+             { error: "Erro inesperado" },
+             { status: 500 }
+         );
+     }
+ } 
 
 function formatUTCtoBrasilia(date: Date) {
     const brasiliaOffset = -3; // UTC -3 para o horário de Brasília
