@@ -2,24 +2,23 @@
 
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useState, Suspense } from "react";
+import { useEffect, useState, Suspense } from "react";
 import styles from "../page.module.css";
 
 export default function Previsao() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  
-  const [currentStage, setCurrentStage] = useState("checkin");
+  const [currentStage, setCurrentStage] = useState<string | null>(null);
 
   // UseEffect para garantir que o código só execute no cliente
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
+      const searchParams = new URLSearchParams(window.location.search);
       setCurrentStage(searchParams.get("stage") || "checkin");
     }
-  }, [searchParams]);
+  }, []); // Executa uma vez, apenas no cliente
 
   async function handleExit() {
-    const res = await fetch('/api/login', { method: 'DELETE' });
+    const res = await fetch("/api/login", { method: "DELETE" });
     if (res.ok) {
       router.push("/login"); // Redireciona para a página de login 
     }
@@ -41,7 +40,7 @@ export default function Previsao() {
         <div className={styles.container}>
           <h1>PREVISÃO DE HORÁRIOS</h1>
           <Suspense fallback={<div>Carregando...</div>}>
-            <Horas currentStage={currentStage} />
+            {currentStage && <Horas currentStage={currentStage} />}
           </Suspense>
         </div>
         <button className={styles.ExitButton} onClick={handleExit}>
