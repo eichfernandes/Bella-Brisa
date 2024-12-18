@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
         }
     
         // Find or create today's registro
-        const hoje = new Date().toISOString().split("T")[0]; // Get YYYY-MM-DD format
+        const hoje = formatUTCtoBrasilia(new Date()).toISOString().split("T")[0]; // Get YYYY-MM-DD format
         let hojeRegistro = user.Horas.find(
             (registro: { data: string }) => registro.data === hoje
         );
@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
             );
         }
     
-        hojeRegistro[tipo] = new Date();
+        hojeRegistro[tipo] = formatUTCtoBrasilia(new Date());
     
         // Update the user in the database
         await updateByCPF(cpf, { Horas: user.Horas });
@@ -74,4 +74,14 @@ export async function POST(req: NextRequest) {
             { status: 500 }
         );
     }
+}
+
+function formatUTCtoBrasilia(date: Date) {
+    const brasiliaOffset = -3; // UTC -3 para o horário de Brasília
+
+    // Cria um novo objeto Date ajustando o fuso horário
+    const brasiliaDate = new Date(date);
+    brasiliaDate.setHours(brasiliaDate.getHours() + brasiliaOffset);
+
+    return brasiliaDate;
 }

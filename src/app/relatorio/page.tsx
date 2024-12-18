@@ -95,9 +95,9 @@ export default function Relatorio() {
     .map((hora) => [
       formatDateToDDMMYYYY(new Date(hora.data)) || "FALTA",
       formatHour(hora.checkIn),
-      formatHour(hora.checkOut),
-      formatHour(hora.almocoIn),
-      formatHour(hora.almocoOut),
+      `${formatHour(hora.checkOut)}${hora.checkOut ? "\n" + formatDateToDDMMYYYY(new Date(hora.checkOut)) : "" }`,
+      `${formatHour(hora.almocoIn)}${hora.almocoIn ? "\n" + formatDateToDDMMYYYY(new Date(hora.almocoIn)) : "" }`,
+      `${formatHour(hora.almocoOut)}${hora.almocoOut ? "\n" + formatDateToDDMMYYYY(new Date(hora.almocoOut)) : "" }`,
       formatDecimalToHours(calculateHoursWorked(hora.checkIn, hora.checkOut, hora.almocoIn, hora.almocoOut)),
       formatDecimalToHours(calculateLunchDuration(hora.almocoIn, hora.almocoOut)),
       formatDecimalToHours(calculateInconsistency(hora.checkIn, hora.checkOut, hora.almocoIn, hora.almocoOut)),
@@ -108,7 +108,7 @@ export default function Relatorio() {
       head: [tableHeaders],
       body: tableData,
       theme: "grid",
-      styles: { fontSize: 8, halign: "center" },
+      styles: { fontSize: 8, halign: "center", valign: 'middle' },
     });
 
     doc.save(`Relatorio_${user.nome}_(${ActualDateString}).pdf`);
@@ -188,9 +188,9 @@ export default function Relatorio() {
       const tableData = user.Horas.sort((a,b) => new Date(a.data).getTime() - new Date(b.data).getTime()).map((hora) => [
         formatDateToDDMMYYYY(new Date(hora.data)) || "FALTA",
         formatHour(hora.checkIn),
-        formatHour(hora.checkOut),
-        formatHour(hora.almocoIn),
-        formatHour(hora.almocoOut),
+        `${formatHour(hora.checkOut)}${hora.checkOut ? "\n" + formatDateToDDMMYYYY(new Date(hora.checkOut)) : "" }`,
+        `${formatHour(hora.almocoIn)}${hora.almocoIn ? "\n" + formatDateToDDMMYYYY(new Date(hora.almocoIn)) : "" }`,
+        `${formatHour(hora.almocoOut)}${hora.almocoOut ? "\n" + formatDateToDDMMYYYY(new Date(hora.almocoOut)) : "" }`,
         formatDecimalToHours(calculateHoursWorked(hora.checkIn, hora.checkOut, hora.almocoIn, hora.almocoOut)),
         formatDecimalToHours(calculateLunchDuration(hora.almocoIn, hora.almocoOut)),
         formatDecimalToHours(calculateInconsistency(hora.checkIn, hora.checkOut, hora.almocoIn, hora.almocoOut)),
@@ -201,7 +201,7 @@ export default function Relatorio() {
         head: [tableHeaders],
         body: tableData,
         theme: "grid",
-        styles: { fontSize: 8, halign: "center" },
+        styles: { fontSize: 8, halign: "center", valign: 'middle' },
       });
   
       // Atualiza o yOffset para a próxima seção
@@ -290,9 +290,9 @@ export default function Relatorio() {
       const tableData = user.Horas.sort((a,b) => new Date(a.data).getTime() - new Date(b.data).getTime()).map((hora) => [
         formatDateToDDMMYYYY(new Date(hora.data)) || "FALTA",
         formatHour(hora.checkIn),
-        formatHour(hora.checkOut),
-        formatHour(hora.almocoIn),
-        formatHour(hora.almocoOut),
+        `${formatHour(hora.checkOut)}${hora.checkOut ? "\n" + formatDateToDDMMYYYY(new Date(hora.checkOut)) : "" }`,
+        `${formatHour(hora.almocoIn)}${hora.almocoIn ? "\n" + formatDateToDDMMYYYY(new Date(hora.almocoIn)) : "" }`,,
+        `${formatHour(hora.almocoOut)}${hora.almocoOut ? "\n" + formatDateToDDMMYYYY(new Date(hora.almocoOut)) : "" }`,
         formatDecimalToHours(calculateHoursWorked(hora.checkIn, hora.checkOut, hora.almocoIn, hora.almocoOut)),
         formatDecimalToHours(calculateLunchDuration(hora.almocoIn, hora.almocoOut)),
         formatDecimalToHours(calculateInconsistency(hora.checkIn, hora.checkOut, hora.almocoIn, hora.almocoOut)),
@@ -303,7 +303,7 @@ export default function Relatorio() {
         head: [tableHeaders],
         body: tableData,
         theme: "grid",
-        styles: { fontSize: 8, halign: "center" },
+        styles: { fontSize: 8, halign: "center", valign: 'middle' },
       });
   
       // Atualiza o yOffset para a próxima seção
@@ -393,18 +393,41 @@ export default function Relatorio() {
 }
 
 // Funções auxiliares
-const formatHour = (time: string | null) =>
-  time
-    ? new Date(time).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-    : "FALTA";
+const formatHour = (time: string | null) => {
+  if(time){
+    return time.slice(11, 16);
+  }else{
+    return "FALTA";
+  } 
+}
+    
 
 const formatDateToDDMMYYYY = (date: Date): string => {
-  const day = String(date.getDate()).padStart(2, '0'); // Adiciona 0 à esquerda se o dia for menor que 10
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // Meses começam do 0, então somamos 1
-  const year = date.getFullYear();
+  const dateBr = new Date(formatUTCtoBrasilia(date));
+
+  const day = String(dateBr.getUTCDate()).padStart(2, '0'); // Adiciona 0 à esquerda se o dia for menor que 10
+  const month = String(dateBr.getUTCMonth() + 1).padStart(2, '0'); // Meses começam do 0, então somamos 1
+  const year = dateBr.getUTCFullYear();
 
   return `${day}/${month}/${year}`;
 };
+
+function formatUTCtoBrasilia(date: Date) {
+    // Ajusta para o fuso horário de Brasília (UTC-3)
+    const offsetBrasilia = -3; // Horário padrão UTC-3
+    const novaData = new Date(date.getTime() + offsetBrasilia * 60 * 60 * 1000);
+
+    // Formata novamente para o formato ISO sem alterar o padrão
+    const ano = novaData.getUTCFullYear();
+    const mes = String(novaData.getUTCMonth() + 1).padStart(2, '0');
+    const dia = String(novaData.getUTCDate()).padStart(2, '0');
+    const horas = String(novaData.getUTCHours()).padStart(2, '0');
+    const minutos = String(novaData.getUTCMinutes()).padStart(2, '0');
+    const segundos = String(novaData.getUTCSeconds()).padStart(2, '0');
+    const milissegundos = String(novaData.getUTCMilliseconds()).padStart(3, '0');
+
+    return `${ano}-${mes}-${dia}T${horas}:${minutos}:${segundos}.${milissegundos}`;
+}
 
 const calculateHoursWorked = (checkIn: string | null, checkOut: string | null, almocoIn: string | null, almocoOut: string | null) => {
   if (!checkIn || !checkOut) return 0;

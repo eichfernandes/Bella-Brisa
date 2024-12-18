@@ -11,6 +11,10 @@ export default function Ponto() {
   const router = useRouter();
   const cpf = "12345678900"; // This should come from authentication or user session
 
+  function handlePrevisao(stage: string) {
+    router.push(`/previsao?stage=${stage}`); // Passa o parâmetro "stage"
+  }
+
   const [userData, setUserData] = useState<{ id: string; nome: string } | null>(null); // Para escrever ID e Nome do funcionário na tela
 
   // Busca o estado atual do expediente no banco de dados ao carregar a página
@@ -26,8 +30,9 @@ export default function Ponto() {
             id: data.user?.id || "ID não encontrado",  // Ajuste conforme o formato da resposta
             nome: data.user?.nome || "Nome não encontrado", // Ajuste conforme o formato da resposta
           });
-          console.log(data)
-          const today = new Date().toISOString().split("T")[0]; // Pega apenas a data (YYYY-MM-DD)
+          console.log(data);
+          const today = formatUTCtoBrasilia(new Date()).toISOString().split("T")[0]; // Pega apenas a data (YYYY-MM-DD)
+          console.log(today);
           const todayRecord = data.user?.Horas?.find(
             (record: { data: string }) => record.data === today
           );
@@ -89,10 +94,10 @@ export default function Ponto() {
     }
   };
 
-  const handleCheckIn = () => updateStage("checkIn");
-  const handleLunch = () => updateStage("almocoIn");
-  const handleAfterLunch = () => updateStage("almocoOut");
-  const handleCheckOut = () => updateStage("checkOut");
+  const handleCheckIn = () => {updateStage("checkIn"); handlePrevisao("checkin");};
+  const handleLunch = () => {updateStage("almocoIn"); handlePrevisao("interval");}
+  const handleAfterLunch = () => {updateStage("almocoOut"); handlePrevisao("return");}
+  const handleCheckOut = () => {updateStage("checkOut"); handlePrevisao("checkout");}
   const handlePasswordChange = () => router.push("/trocar-senha");
   async function handleExit() {
     const res = await fetch('/api/login', { method: 'DELETE' })
@@ -100,17 +105,6 @@ export default function Ponto() {
       router.push("/login"); // Redireciona para a página de login 
     }
   }
-
-  const [currentDateTime, setCurrentDateTime] = useState<string>("");
-
-  useEffect(() => {
-    const today = new Date();
-    const dateString = today.toLocaleDateString("pt-BR"); // Data no formato DD/MM/AAAA
-    const timeString = today.toLocaleTimeString("pt-BR"); // Hora no formato HH:MM:SS
-    setCurrentDateTime(`${dateString} ${timeString}`);
-  
-    // Sua lógica para buscar o estado do expediente...
-  }, []);
 
   return (
     <div className={styles.page}>
@@ -129,7 +123,6 @@ export default function Ponto() {
         <div className={styles.container}>
           <h1>REGISTRO DE PONTO</h1>
           <h2>ID: {userData?.id + " - " + userData?.nome || 'Carregando...'}</h2>
-          <h3>({currentDateTime})</h3>
           {errorMessage && <p className={styles.errorText}>{errorMessage}</p>}
           {stage === "loading" && (
             <div className={styles.TextBox}>
@@ -173,7 +166,7 @@ export default function Ponto() {
           {stage === "duringLunch" && (
             <div className={styles.TextBox}>
               Você está em intervalo no momento. Clique em "Retornar" para
-              terminá-lo:
+              voltar ao trabalho:
               <br />
               <input
                 className={styles.CheckButton}
@@ -219,4 +212,14 @@ export default function Ponto() {
       </footer>
     </div>
   );
+}
+
+function formatUTCtoBrasilia(date: Date) {
+  const brasiliaOffset = -3; // UTC -3 para o horário de Brasília
+
+  // Cria um novo objeto Date ajustando o fuso horário
+  const brasiliaDate = new Date(date);
+  brasiliaDate.setHours(brasiliaDate.getHours() + brasiliaOffset);
+
+  return brasiliaDate;
 }

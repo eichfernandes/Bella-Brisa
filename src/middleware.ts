@@ -5,7 +5,7 @@ export async function middleware(req: NextRequest) {
   const token = req.cookies.get('token')?.value;
   const loginUrl = new URL('/login', req.url);
   const pontoUrl = new URL('/ponto', req.url);
-  const paginasFuncionario = ['/ponto', '/api/ponto', '/trocar-senha']
+  const paginasFuncionario = ['/ponto', '/api/ponto', '/trocar-senha', '/previsao']
   const isPaginaFuncionario = (paginas: Array<string>) => paginas.reduce((acc, curr) => acc || req.nextUrl.pathname.startsWith(curr), false)
 
   if (!token) {

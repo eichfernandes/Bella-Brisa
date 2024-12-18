@@ -1,55 +1,23 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import styles from "../page.module.css";
 
 export default function Previsao() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  
+  // Captura o parâmetro da URL ou define um valor padrão
+  const [currentStage, setCurrentStage] = useState(searchParams.get("stage") || "checkin");
+
   async function handleExit() {
-    const res = await fetch('/api/login', { method: 'DELETE' })
-    if (res.ok){
+    const res = await fetch('/api/login', { method: 'DELETE' });
+    if (res.ok) {
       router.push("/login"); // Redireciona para a página de login 
     }
   }
-
-  // Estados para armazenar o horário do Check-in e a etapa do expediente
-  const [currentStage, setCurrentStage] = useState("checkin");
-  const [checkinTime, setCheckinTime] = useState<Date | null>(null);
-  const [intervalStartTime, setIntervalStartTime] = useState<Date | null>(null);
-  const [returnTime, setReturnTime] = useState<Date | null>(null);
-
-  // Função para calcular previsões baseadas nos horários
-  const calculateTime = (baseTime: Date, hoursToAdd: number) => {
-    const newTime = new Date(baseTime);
-    newTime.setHours(newTime.getHours() + hoursToAdd);
-    return newTime;
-  };
-
-  // Lógica para avançar de uma etapa para outra
-  const advanceStage = () => {
-    switch (currentStage) {
-      case "checkin":
-        const now = new Date();
-        setCheckinTime(now);
-        setCurrentStage("interval");
-        break;
-      case "interval":
-        setIntervalStartTime(new Date());
-        setCurrentStage("return");
-        break;
-      case "return":
-        setReturnTime(new Date());
-        setCurrentStage("checkout");
-        break;
-      case "checkout":
-        setCurrentStage("farewell");
-        break;
-      default:
-        break;
-    }
-  };
 
   return (
     <div className={styles.page}>
@@ -66,17 +34,7 @@ export default function Previsao() {
       <main className={styles.main}>
         <div className={styles.container}>
           <h1>PREVISÃO DE HORÁRIOS</h1>
-          <Horas
-            currentStage={currentStage}
-            checkinTime={checkinTime}
-            intervalStartTime={intervalStartTime}
-            returnTime={returnTime}
-          />
-          {currentStage !== "farewell" && (
-            <button className={styles.CheckButton} onClick={advanceStage}>
-              Avançar
-            </button>
-          )}
+          <Horas currentStage={currentStage} />
         </div>
         <button className={styles.ExitButton} onClick={handleExit}>
           Sair
@@ -88,62 +46,93 @@ export default function Previsao() {
 
 interface HorasProps {
   currentStage: string;
-  checkinTime: Date | null;
-  intervalStartTime: Date | null;
-  returnTime: Date | null;
 }
 
-function Horas({
-  currentStage,
-  checkinTime,
-  intervalStartTime,
-  returnTime,
-}: HorasProps) {
-  const formatTime = (date: Date | null) =>
-    date
-      ? date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-      : "Não disponível";
+function formatUTCtoBrasilia(date: Date) {
+  const brasiliaOffset = -3; // UTC -3 para o horário de Brasília
 
-  const calculateTime = (baseTime: Date | null, hoursToAdd: number) => {
-    if (!baseTime) return "FALTA";
-    const newTime = new Date(baseTime);
-    newTime.setHours(newTime.getHours() + hoursToAdd);
-    return formatTime(newTime);
-  };
+  // Cria um novo objeto Date ajustando o fuso horário
+  const brasiliaDate = new Date(date);
+  brasiliaDate.setHours(brasiliaDate.getHours() + brasiliaOffset);
+
+  return brasiliaDate;
+}
+
+function getIntervalo(date: Date):string{
+  const dateBr = formatUTCtoBrasilia(date);
+  dateBr.setHours(dateBr.getHours() + 4);
+  // Chama toString para obter uma string representando a data
+  const timeIntervaloString = dateBr.toISOString();
+
+  const dateRetorno = dateBr;
+  dateRetorno.setHours(dateBr.getHours() + 1);
+  // Chama toString para obter uma string representando a data
+  const timeRetornoString = dateRetorno.toISOString();
+
+  // Usa slice para extrair a parte da hora (HH:mm)
+  return timeIntervaloString.slice(11,16) + " - " + timeRetornoString.slice(11,16);
+}
+
+function getCheckinSaida(date: Date):string{
+  const dateBr = formatUTCtoBrasilia(date);
+  dateBr.setHours(dateBr.getHours() + 9);
+
+  // Chama toString para obter uma string representando a data
+  const timeString = dateBr.toISOString();
+
+  // Usa slice para extrair a parte da hora (HH:mm)
+  return timeString.slice(11,16);
+}
+
+function getRetorno(date: Date):string{
+  const dateBr = formatUTCtoBrasilia(date);
+  dateBr.setHours(dateBr.getHours() + 1);
+
+  // Chama toString para obter uma string representando a data
+  const timeString = dateBr.toISOString();
+
+  // Usa slice para extrair a parte da hora (HH:mm)
+  return timeString.slice(11,16);
+}
+
+function getRetornoSaida(date: Date):string{
+  const dateBr = formatUTCtoBrasilia(date);
+  dateBr.setHours(dateBr.getHours() + 4);
+
+  // Chama toString para obter uma string representando a data
+  const timeString = dateBr.toISOString();
+
+  // Usa slice para extrair a parte da hora (HH:mm)
+  return timeString.slice(11,16);
+}
+
+function Horas({ currentStage }: HorasProps) {
+  const time = new Date;
 
   if (currentStage === "checkin") {
     return (
       <div className={styles.TextBox}>
-        <p>Início do expediente.</p>
-        <p>Previsão de Intervalo: {calculateTime(new Date(), 4)}</p>
-        <p>Previsão de Saída: {calculateTime(new Date(), 8)}</p>
+        <p>Previsão de Intervalo: {getIntervalo(time)}</p><br/>
+        <p>Previsão de Saída: {getCheckinSaida(time)}</p>
       </div>
     );
   } else if (currentStage === "interval") {
     return (
       <div className={styles.TextBox}>
-        <p>Intervalo iniciado.</p>
-        <p>Previsão de Retorno: {calculateTime(new Date(), 1)}</p>
+        <p>Previsão de Retorno: {getRetorno(time)}</p>
       </div>
     );
   } else if (currentStage === "return") {
     return (
       <div className={styles.TextBox}>
-        <p>Retorno do Intervalo.</p>
-        <p>Previsão de Saída: {calculateTime(returnTime, 4)}</p>
+        <p>Previsão de Saída: {getRetornoSaida(time)}</p>
       </div>
     );
   } else if (currentStage === "checkout") {
     return (
       <div className={styles.TextBox}>
         <p>Fim do expediente!</p>
-        <p>Obrigado por hoje.</p>
-      </div>
-    );
-  } else if (currentStage === "farewell") {
-    return (
-      <div className={styles.TextBox}>
-        <p>Até logo!</p>
+        <p>Obrigado pelo seu serviço.</p>
       </div>
     );
   }
