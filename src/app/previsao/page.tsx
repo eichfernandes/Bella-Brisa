@@ -2,19 +2,18 @@
 
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import styles from "../page.module.css";
 
 export default function Previsao() {
   const router = useRouter();
   const searchParams = useSearchParams();
-
-  // Estado para armazenar o valor do estágio
+  
   const [currentStage, setCurrentStage] = useState("checkin");
 
+  // UseEffect para garantir que o código só execute no cliente
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      // Certifique-se de que está no cliente antes de acessar searchParams
       setCurrentStage(searchParams.get("stage") || "checkin");
     }
   }, [searchParams]);
@@ -22,7 +21,7 @@ export default function Previsao() {
   async function handleExit() {
     const res = await fetch('/api/login', { method: 'DELETE' });
     if (res.ok) {
-      router.push("/login"); // Redireciona para a página de login
+      router.push("/login"); // Redireciona para a página de login 
     }
   }
 
@@ -41,7 +40,9 @@ export default function Previsao() {
       <main className={styles.main}>
         <div className={styles.container}>
           <h1>PREVISÃO DE HORÁRIOS</h1>
-          <Horas currentStage={currentStage} />
+          <Suspense fallback={<div>Carregando...</div>}>
+            <Horas currentStage={currentStage} />
+          </Suspense>
         </div>
         <button className={styles.ExitButton} onClick={handleExit}>
           Sair
