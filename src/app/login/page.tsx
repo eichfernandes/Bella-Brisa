@@ -25,7 +25,12 @@ export default function LoginPage() {
       });
 
       if (response.ok) {
-        router.push('/rh');
+        // Verifica se é ADM
+        if(cpf === "0000" || cpf === "0001" || cpf === "00000000000100" || cpf === "00000000000100" ){
+          router.push('/rh');
+        }else{
+          router.push('/ponto');
+        }
       } else {
         const errorResponse = await response.json();
         setErrorMessage(errorResponse.message || 'Erro de Login: Identificador ou Senha incorretos.');
