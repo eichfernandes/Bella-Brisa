@@ -291,7 +291,7 @@ export default function Relatorio() {
         formatDateToDDMMYYYY(new Date(hora.data)) || "FALTA",
         formatHour(hora.checkIn),
         `${formatHour(hora.checkOut)}${hora.checkOut ? "\n" + formatDateToDDMMYYYY(new Date(hora.checkOut)) : "" }`,
-        `${formatHour(hora.almocoIn)}${hora.almocoIn ? "\n" + formatDateToDDMMYYYY(new Date(hora.almocoIn)) : "" }`,,
+        `${formatHour(hora.almocoIn)}${hora.almocoIn ? "\n" + formatDateToDDMMYYYY(new Date(hora.almocoIn)) : "" }`,
         `${formatHour(hora.almocoOut)}${hora.almocoOut ? "\n" + formatDateToDDMMYYYY(new Date(hora.almocoOut)) : "" }`,
         formatDecimalToHours(calculateHoursWorked(hora.checkIn, hora.checkOut, hora.almocoIn, hora.almocoOut)),
         formatDecimalToHours(calculateLunchDuration(hora.almocoIn, hora.almocoOut)),
