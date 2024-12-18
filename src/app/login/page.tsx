@@ -26,7 +26,7 @@ export default function LoginPage() {
 
       if (response.ok) {
         // Verifica se é ADM
-        if(cpf === "0000" || cpf === "0001" || cpf === "00000000000100" || cpf === "00000000000100" ){
+        if(cpf === "0000" || cpf === "0001" || cpf === "99323254000108" || cpf === "36686218022" ){
           router.push('/rh');
         }else{
           router.push('/ponto');
