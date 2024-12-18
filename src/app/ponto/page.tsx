@@ -11,6 +11,12 @@ export default function Ponto() {
   const router = useRouter();
   const cpf = "12345678900"; // This should come from authentication or user session
 
+  function handlePrevisao(stage: string) {
+    router.push(`/previsao?stage=${stage}`); // Passa o parâmetro "stage"
+  }
+
+  const [userData, setUserData] = useState<{ id: string; nome: string } | null>(null); // Para escrever ID e Nome do funcionário na tela
+
   // Busca o estado atual do expediente no banco de dados ao carregar a página
   useEffect(() => {
     async function fetchStage() {
@@ -20,17 +26,19 @@ export default function Ponto() {
         });
         if (response.ok) {
           const data = await response.json();
-          console.log(data)
-          const today = new Date().toISOString().split("T")[0]; // Pega apenas a data (YYYY-MM-DD)
-          const todayRecord = data.user?.Horas?.find(
-            (record: { data: string }) => record.data === today
-          );
+          setUserData({
+            id: data.user?.id || "ID não encontrado",  // Ajuste conforme o formato da resposta
+            nome: data.user?.nome || "Nome não encontrado", // Ajuste conforme o formato da resposta
+          });
+          console.log(data);
+          const ultimoRegistro = data.user.Horas[data.user.Horas.length - 1];
+          console.log("ultimo registro: " + ultimoRegistro.data)
 
-          if (todayRecord) {
-            if (todayRecord.checkOut) setStage("end");
-            else if (todayRecord.almocoOut) setStage("afterLunch");
-            else if (todayRecord.almocoIn) setStage("duringLunch");
-            else if (todayRecord.checkIn) setStage("beforeLunch");
+          if (ultimoRegistro) {
+            if (ultimoRegistro.checkOut) setStage("start");
+            else if (ultimoRegistro.almocoOut) setStage("afterLunch");
+            else if (ultimoRegistro.almocoIn) setStage("duringLunch");
+            else if (ultimoRegistro.checkIn) setStage("beforeLunch");
             else setStage("start");
           } else {
             setStage("start");
@@ -83,10 +91,10 @@ export default function Ponto() {
     }
   };
 
-  const handleCheckIn = () => updateStage("checkIn");
-  const handleLunch = () => updateStage("almocoIn");
-  const handleAfterLunch = () => updateStage("almocoOut");
-  const handleCheckOut = () => updateStage("checkOut");
+  const handleCheckIn = () => {updateStage("checkIn"); handlePrevisao("checkin");};
+  const handleLunch = () => {updateStage("almocoIn"); handlePrevisao("interval");}
+  const handleAfterLunch = () => {updateStage("almocoOut"); handlePrevisao("return");}
+  const handleCheckOut = () => {updateStage("checkOut"); handlePrevisao("checkout");}
   const handlePasswordChange = () => router.push("/trocar-senha");
   async function handleExit() {
     const res = await fetch('/api/login', { method: 'DELETE' })
@@ -111,7 +119,7 @@ export default function Ponto() {
       <main className={styles.main}>
         <div className={styles.container}>
           <h1>REGISTRO DE PONTO</h1>
-          <h2>ID: #### - Nome Completo</h2>
+          <h2>ID: {userData?.id + " - " + userData?.nome || 'Carregando...'}</h2>
           {errorMessage && <p className={styles.errorText}>{errorMessage}</p>}
           {stage === "loading" && (
             <div className={styles.TextBox}>
@@ -155,7 +163,7 @@ export default function Ponto() {
           {stage === "duringLunch" && (
             <div className={styles.TextBox}>
               Você está em intervalo no momento. Clique em "Retornar" para
-              terminá-lo:
+              voltar ao trabalho:
               <br />
               <input
                 className={styles.CheckButton}
